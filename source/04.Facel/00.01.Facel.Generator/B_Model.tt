@@ -1,0 +1,371 @@
+﻿<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="Library.tt"#>
+<#@ include file="Model.tt"#>
+<#@ output extension=".cs"#>
+<#
+
+CodeGenerationTools code = new CodeGenerationTools(this);
+MetadataLoader loader = new MetadataLoader(this);
+CodeRegion region = new CodeRegion(this, 1);
+MetadataTools ef = new MetadataTools(this);
+
+string namespaceName = GetName();
+string inputFile = namespaceName + @".edmx";
+EdmItemCollection ItemCollection = loader.CreateEdmItemCollection(inputFile);
+
+EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this);
+
+// Write out support code to primary template output file
+WriteHeader(fileManager, namespaceName, GetNamespaces("BModel"));
+BeginNamespace(namespaceName, code);
+SupportCode(namespaceName);
+
+EndNamespace(namespaceName);
+
+
+// Emit Entity Types
+foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e => e.Name))
+{
+	/////////////begin file generation 
+
+	if (1==1)
+	{
+		fileManager.StartNewFile("B_Model\\" + CaseToCamel(entity.Name) + "_BM.cs");
+#>
+
+//BusinessEntity
+<#
+    BeginNamespace(namespaceName + ".Data.Entities", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+}
+<#
+	EndNamespace(namespaceName);
+#>
+<#
+    BeginNamespace(namespaceName + ".Business.Entities", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+}
+<#
+	EndNamespace(namespaceName);
+#>
+
+//BusinessAccess
+<#
+    BeginNamespace(namespaceName + ".Data.Accesses", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{	
+}
+<#
+	EndNamespace(namespaceName);
+#>
+<#
+    BeginNamespace(namespaceName + ".Business.Accesses", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+	//protected override DbCommand GetCommandData(DbCommand paramCommand, Entity paramDE, string paramType, bool paramIsSourceColumn = false)
+    //{
+        //<#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+
+		//paramCommand.CommandText = "gsp_<#=code.Escape(entity)#>_data";
+        //paramCommand.Parameters.Add(Database.GetParameter(ConnectionStringName, "@param_type", System.Data.DbType.String, paramType));
+
+		//return paramCommand;
+    //}
+    //protected override DbCommand GetCommandKey(DbCommand paramCommand, Entity paramDE, string paramType, bool paramIsSourceColumn = false)
+    //{
+        //<#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+
+        //paramCommand.CommandText = "gsp_<#=code.Escape(entity)#>_key";
+        //paramCommand.Parameters.Add(Database.GetParameter(ConnectionStringName, "@param_type", System.Data.DbType.String, paramType));
+
+        //return paramCommand;
+    //}		
+}
+<#
+	EndNamespace(namespaceName);
+#>
+
+//BusinessLogic
+<#
+    BeginNamespace(namespaceName + ".Data.Logics", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+    <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_DL(string paramEntityName = "<#=CaseToCamel(code.Escape(entity))#>",
+	string paramTableName = "<#=code.Escape(entity)#>", string paramConnectionStringName = <#=namespaceName#>Main.ConnectionStringName)
+        : base(paramEntityName,
+		paramTableName, paramConnectionStringName)
+    {
+    }
+}
+<#
+	EndNamespace(namespaceName);
+#>
+<#
+    BeginNamespace(namespaceName + ".Business.Logics", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+	protected override bool ValidateInsert(Entity paramDE, ref string paramField, ref string paramMessage)
+    {
+        bool ret = base.ValidateInsert(paramDE, ref paramField, ref paramMessage);
+
+        if (!ret)
+        {
+            if (paramMessage == LibraryFramework.V0005_FieldEmpty)
+            {
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID"))
+{
+    int i = 0;
+
+
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np =>
+        np.DeclaringType == entity &&
+        np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+    {
+        foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+        {
+            var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+            EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+            if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+            {
+
+                if (i == 0)
+                {#><#}
+				i++;#>	
+				if (paramField == "<#=CaseToCamel(code.Escape(p), false)#>")
+					paramMessage = string.Format(LibraryFramework.V0005_FieldEmpty, "el <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>");
+<#
+			}
+        }
+    }
+    if (i == 0)
+    {#><#}
+    else
+    {#><#}
+}
+#>
+            }
+        }
+
+        return ret;
+    }
+	protected override bool ValidateDelete(Entity paramDE, ref string paramField, ref string paramMessage, bool paramValidateCascadeIntegrity = true)
+    {
+        bool ret = base.ValidateDelete(paramDE, ref paramField, ref paramMessage, paramValidateCascadeIntegrity);
+
+        if (!ret)
+        {
+            if (paramMessage == LibraryFramework.V0006_TableDependencies)
+            {
+				string sCurrentTable = "El <#=CaseToCamelWOPrefix(code.Escape(entity.Name))#>";
+				
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One))
+    {		
+#>
+				if (paramField == "<#=CaseToCamelWOPrefix(code.Escape(navProperty.ToEndMember.GetEntityType()))#>")
+                {
+                    paramField = string.Empty;
+                    paramMessage = string.Format(LibraryFramework.V0006_TableDependencies, sCurrentTable, "<#=CaseToCamelWOPrefix(code.Escape(navProperty.ToEndMember.GetEntityType()))#>s");
+                }
+<#}
+}
+#> 			}
+        }
+
+        return ret;
+    }	
+}
+<#
+	EndNamespace(namespaceName);
+#>
+
+//FilterEntities
+<#
+BeginNamespace(namespaceName + ".Join.Entities", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+}
+<#
+EndNamespace(namespaceName);
+#>
+<#
+BeginNamespace(namespaceName + ".Filter.Entities", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+//FilterAccess
+<#
+BeginNamespace(namespaceName + ".Join.Accesses", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{	
+}
+<#
+EndNamespace(namespaceName);
+#>
+<#
+BeginNamespace(namespaceName + ".Filter.Accesses", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{	
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+//FilterLogic
+<#
+BeginNamespace(namespaceName + ".Join.Logics", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+    <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_JL(string paramEntityName = "<#=CaseToCamel(code.Escape(entity))#>",
+	string paramTableName = "<#=code.Escape(entity)#>", string paramConnectionStringName = <#=namespaceName#>Main.ConnectionStringName)
+        : base(paramEntityName,
+		paramTableName, paramConnectionStringName)
+	{
+	}
+}
+<#
+EndNamespace(namespaceName);
+#>
+<#
+BeginNamespace(namespaceName + ".Filter.Logics", code);
+#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+{
+}
+<#
+EndNamespace(namespaceName);
+#>
+	
+<#	
+/////////////end file generation
+	}
+}
+fileManager.Process();
+#>
+
+<#+
+void WriteHeader(EntityFrameworkTemplateFileManager fileManager, string namespaceName, params string[] extraUsings)
+{
+    fileManager.StartHeader();
+#>
+using System;
+using System.Data.Common;
+using System.Collections.Generic;
+using Library.Common.Data;
+using Library.Framework;
+using Library.Framework.Layers;
+
+using <#=namespaceName#>.Data.Entities;
+using <#=namespaceName#>.Data.Accesses;
+using <#=namespaceName#>.Data.Logics;
+using <#=namespaceName#>.Business.Entities;
+using <#=namespaceName#>.Business.Accesses;
+using <#=namespaceName#>.Business.Logics;
+using <#=namespaceName#>.Join.Entities;
+using <#=namespaceName#>.Join.Accesses;
+using <#=namespaceName#>.Join.Logics;
+using <#=namespaceName#>.Filter.Entities;
+using <#=namespaceName#>.Filter.Accesses;
+using <#=namespaceName#>.Filter.Logics;
+using <#=namespaceName#>.Main;
+
+<#=String.Join(String.Empty, extraUsings.Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+    fileManager.EndBlock();
+}
+void SupportCode(string namespaceName)
+{
+#>
+
+//////
+
+<#+
+}
+
+void BeginNamespace(string namespaceName, CodeGenerationTools code)
+{
+    CodeRegion region = new CodeRegion(this);
+    if (!String.IsNullOrEmpty(namespaceName))
+    {
+#>
+namespace <#=code.EscapeNamespace(namespaceName)#>
+{
+<#+
+        PushIndent(CodeRegion.GetIndent(1));
+    }
+}
+
+
+void EndNamespace(string namespaceName)
+{
+    if (!String.IsNullOrEmpty(namespaceName))
+    {
+        PopIndent();
+#>
+}
+<#+
+    }
+}
+
+bool IsReadWriteAccessibleProperty(EdmMember member)
+{
+    string setter = Accessibility.ForWriteOnlyProperty(member);
+    string getter = Accessibility.ForReadOnlyProperty(member);
+
+    return getter != "private" && getter != "protected" && setter != "private" && setter != "protected";
+}
+
+string PropertyVirtualModifier(string accessibility)
+{
+    return accessibility + (accessibility != "private" ? " virtual" : "");
+}
+
+bool VerifyTypesAreCaseInsensitiveUnique(EdmItemCollection itemCollection)
+{
+    Dictionary<string, bool> alreadySeen = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+    foreach(StructuralType type in itemCollection.GetItems<StructuralType>())
+    {
+        if (!(type is EntityType || type is ComplexType))
+        {
+            continue;
+        }
+
+        if (alreadySeen.ContainsKey(type.FullName))
+        {
+            Error(String.Format(CultureInfo.CurrentCulture, "This template does not support types that differ only by case, the types {0} are not supported", type.FullName));
+            return false;
+        }
+        else
+        {
+            alreadySeen.Add(type.FullName, true);
+        }
+
+    }
+
+    return true;
+}
+#>
