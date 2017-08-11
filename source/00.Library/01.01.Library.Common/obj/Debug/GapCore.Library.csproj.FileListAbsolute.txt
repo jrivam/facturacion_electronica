@@ -1,0 +1,10 @@
+D:\jriva\gapcore\source\GapCore\GapCore.Library\bin\Debug\GapCore.Library.dll
+D:\jriva\gapcore\source\GapCore\GapCore.Library\bin\Debug\GapCore.Library.pdb
+D:\jriva\gapcore\source\GapCore\GapCore.Library\obj\Debug\ResolveAssemblyReference.cache
+D:\jriva\gapcore\source\GapCore\GapCore.Library\obj\Debug\GapCore.Library.dll
+D:\jriva\gapcore\source\GapCore\GapCore.Library\obj\Debug\GapCore.Library.pdb
+D:\jorge\develop\gapcore\source\GapCore\GapCore.Library\bin\Debug\GapCore.Library.dll
+D:\jorge\develop\gapcore\source\GapCore\GapCore.Library\bin\Debug\GapCore.Library.pdb
+D:\jorge\develop\gapcore\source\GapCore\GapCore.Library\obj\Debug\ResolveAssemblyReference.cache
+D:\jorge\develop\gapcore\source\GapCore\GapCore.Library\obj\Debug\GapCore.Library.dll
+D:\jorge\develop\gapcore\source\GapCore\GapCore.Library\obj\Debug\GapCore.Library.pdb

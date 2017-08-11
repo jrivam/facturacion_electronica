@@ -1,0 +1,5 @@
+E:\develop\projects\00.Library\source\01.01.Library.Common\bin\Release\00.01.01.Library.Common.dll
+E:\develop\projects\00.Library\source\01.01.Library.Common\bin\Release\00.01.01.Library.Common.pdb
+E:\develop\projects\00.Library\source\01.01.Library.Common\obj\Release\ResolveAssemblyReference.cache
+E:\develop\projects\00.Library\source\01.01.Library.Common\obj\Release\00.01.01.Library.Common.dll
+E:\develop\projects\00.Library\source\01.01.Library.Common\obj\Release\00.01.01.Library.Common.pdb
