@@ -1,0 +1,10 @@
+D:\jorge\develop\GapCore\0.LibraryCommon\bin\Debug\LibraryCommon.dll
+D:\jorge\develop\GapCore\0.LibraryCommon\bin\Debug\LibraryCommon.pdb
+D:\jorge\develop\GapCore\0.LibraryCommon\obj\Debug\ResolveAssemblyReference.cache
+D:\jorge\develop\GapCore\0.LibraryCommon\obj\Debug\LibraryCommon.dll
+D:\jorge\develop\GapCore\0.LibraryCommon\obj\Debug\LibraryCommon.pdb
+C:\develop\project\gapcore\source\GapCore\0.LibraryCommon\bin\Debug\LibraryCommon.dll
+C:\develop\project\gapcore\source\GapCore\0.LibraryCommon\bin\Debug\LibraryCommon.pdb
+C:\develop\project\gapcore\source\GapCore\0.LibraryCommon\obj\Debug\ResolveAssemblyReference.cache
+C:\develop\project\gapcore\source\GapCore\0.LibraryCommon\obj\Debug\LibraryCommon.dll
+C:\develop\project\gapcore\source\GapCore\0.LibraryCommon\obj\Debug\LibraryCommon.pdb

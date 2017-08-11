@@ -1,0 +1,15 @@
+D:\jorge\develop\GapCoreM\GapCore\0.GapCore.Library\obj\Debug\ResolveAssemblyReference.cache
+D:\jorge\develop\GapCoreM\GapCore\0.GapCore.Library\bin\Debug\GapCore.Library.dll
+D:\jorge\develop\GapCoreM\GapCore\0.GapCore.Library\bin\Debug\GapCore.Library.pdb
+D:\jorge\develop\GapCoreM\GapCore\0.GapCore.Library\obj\Debug\GapCore.Library.dll
+D:\jorge\develop\GapCoreM\GapCore\0.GapCore.Library\obj\Debug\GapCore.Library.pdb
+D:\jorge\develop\GapCoreM\GapCore\0.Library\bin\Debug\GapCore.Library.dll
+D:\jorge\develop\GapCoreM\GapCore\0.Library\bin\Debug\GapCore.Library.pdb
+D:\jorge\develop\GapCoreM\GapCore\0.Library\obj\Debug\ResolveAssemblyReference.cache
+D:\jorge\develop\GapCoreM\GapCore\0.Library\obj\Debug\GapCore.Library.dll
+D:\jorge\develop\GapCoreM\GapCore\0.Library\obj\Debug\GapCore.Library.pdb
+C:\develop\project\gapcore\source\GapCore\0.Library\bin\Debug\GapCore.Library.dll
+C:\develop\project\gapcore\source\GapCore\0.Library\bin\Debug\GapCore.Library.pdb
+C:\develop\project\gapcore\source\GapCore\0.Library\obj\Debug\ResolveAssemblyReference.cache
+C:\develop\project\gapcore\source\GapCore\0.Library\obj\Debug\GapCore.Library.dll
+C:\develop\project\gapcore\source\GapCore\0.Library\obj\Debug\GapCore.Library.pdb

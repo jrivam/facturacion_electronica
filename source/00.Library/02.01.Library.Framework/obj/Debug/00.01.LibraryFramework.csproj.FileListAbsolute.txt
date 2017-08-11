@@ -1,0 +1,7 @@
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\obj\Debug\ResolveAssemblyReference.cache
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\bin\Debug\LibraryFramework.dll
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\bin\Debug\LibraryFramework.pdb
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\bin\Debug\LibraryCommon.dll
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\bin\Debug\LibraryCommon.pdb
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\obj\Debug\LibraryFramework.dll
+C:\develop\project\gapcore\source\GapCore\00.01.LibraryFramework\obj\Debug\LibraryFramework.pdb

@@ -1,0 +1,15 @@
+C:\develop\projects\00.Library\source\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll
+C:\develop\projects\00.Library\source\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.pdb
+C:\develop\projects\00.Library\source\01.01.Library.Common\obj\Debug\ResolveAssemblyReference.cache
+C:\develop\projects\00.Library\source\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll
+C:\develop\projects\00.Library\source\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.pdb
+S:\sources\new\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll
+S:\sources\new\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.pdb
+S:\sources\new\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll
+S:\sources\new\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.pdb
+S:\sources\new\source\00.Library\01.01.Library.Common\obj\Debug\01.01.Library.Common.csprojResolveAssemblyReference.cache
+C:\develop\new\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll
+C:\develop\new\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.pdb
+C:\develop\new\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll
+C:\develop\new\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.pdb
+C:\develop\new\source\00.Library\01.01.Library.Common\obj\Debug\01.01.Library.Common.csprojResolveAssemblyReference.cache
