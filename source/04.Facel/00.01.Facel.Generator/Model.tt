@@ -1,0 +1,18 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+
+<#+
+string GetName()
+{
+	return @"Facel";
+}
+#>
+
+<#+
+string[] GetNamespaces(string paramModel)
+{
+	if (paramModel == "GModel")
+	    return new String[]  {};
+	return new String[] {};
+}
+#>
+

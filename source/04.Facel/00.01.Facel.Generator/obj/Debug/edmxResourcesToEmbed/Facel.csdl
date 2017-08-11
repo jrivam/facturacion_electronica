@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="facelModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="facelEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="agentes_percepcion" EntityType="facelModel.agentes_percepcion" />
+    <EntitySet Name="agentes_retencion" EntityType="facelModel.agentes_retencion" />
+    <EntitySet Name="buenos_contribuyentes" EntityType="facelModel.buenos_contribuyentes" />
+    <EntitySet Name="concepto_venta" EntityType="facelModel.concepto_venta" />
+    <EntitySet Name="detracciones" EntityType="facelModel.detracciones" />
+    <EntitySet Name="documento_identidad" EntityType="facelModel.documento_identidad" />
+    <EntitySet Name="documento_serie" EntityType="facelModel.documento_serie" />
+    <EntitySet Name="documentos_venta" EntityType="facelModel.documentos_venta" />
+    <EntitySet Name="empresa" EntityType="facelModel.empresa" />
+    <EntitySet Name="forma_pago" EntityType="facelModel.forma_pago" />
+    <EntitySet Name="igv_vigente" EntityType="facelModel.igv_vigente" />
+    <EntitySet Name="moneda" EntityType="facelModel.moneda" />
+    <EntitySet Name="sucursal" EntityType="facelModel.sucursal" />
+    <EntitySet Name="tipo_cambio" EntityType="facelModel.tipo_cambio" />
+    <EntitySet Name="unidad_medida" EntityType="facelModel.unidad_medida" />
+    <AssociationSet Name="R_30" Association="facelModel.R_30">
+      <End Role="documentos_venta" EntitySet="documentos_venta" />
+      <End Role="documento_serie" EntitySet="documento_serie" />
+    </AssociationSet>
+    <AssociationSet Name="R_32" Association="facelModel.R_32">
+      <End Role="empresa" EntitySet="empresa" />
+      <End Role="sucursal" EntitySet="sucursal" />
+    </AssociationSet>
+    <AssociationSet Name="R_34" Association="facelModel.R_34">
+      <End Role="empresa" EntitySet="empresa" />
+      <End Role="empresa1" EntitySet="empresa" />
+    </AssociationSet>
+    <AssociationSet Name="R_29" Association="facelModel.R_29">
+      <End Role="moneda" EntitySet="moneda" />
+      <End Role="tipo_cambio" EntitySet="tipo_cambio" />
+    </AssociationSet>
+    <AssociationSet Name="R_33" Association="facelModel.R_33">
+      <End Role="moneda" EntitySet="moneda" />
+      <End Role="tipo_cambio" EntitySet="tipo_cambio" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="agentes_percepcion">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="ruc" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="razon_social" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="agentes_retencion">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="ruc" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="razon_social" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="buenos_contribuyentes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="ruc" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="razon_social" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="concepto_venta">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="codigo" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+    <Property Name="es_default" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="detracciones">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="codigo" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="porcentaje" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="tope_importe" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="activo" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="documento_identidad">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="abreviado" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="codigo_tributario" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="documento_serie">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id_documento_venta" Type="Int32" Nullable="false" />
+    <Property Name="serie" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="numero_actual" Type="Int32" />
+    <Property Name="es_electronico" Type="Boolean" />
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="documentos_venta" Relationship="facelModel.R_30" FromRole="documento_serie" ToRole="documentos_venta" />
+  </EntityType>
+  <EntityType Name="documentos_venta">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="abreviado" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="codigo_tributario" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+    <Property Name="es_nota_debito" Type="Boolean" />
+    <Property Name="calcula_igv" Type="Boolean" />
+    <Property Name="es_comprobante_retencion" Type="Boolean" />
+    <Property Name="es_ticket_punto_venta" Type="Boolean" />
+    <Property Name="es_recibo_por_honorarios" Type="Boolean" />
+    <Property Name="es_comprobante_percepcion" Type="Boolean" />
+    <Property Name="es_factura_negociable" Type="Boolean" />
+    <Property Name="es_nota_credito" Type="Boolean" />
+    <NavigationProperty Name="documento_serie" Relationship="facelModel.R_30" FromRole="documentos_venta" ToRole="documento_serie" />
+  </EntityType>
+  <EntityType Name="empresa">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="id_empresa_padre" Type="Int32" />
+    <Property Name="ruc" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="razon_social" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="direccion" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="direccion_fiscal" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="telefono" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="email" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="website" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+    <Property Name="es_emisor_electronico" Type="Boolean" />
+    <Property Name="usuario_sunat" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="clave_sunat" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="ruta_firma_digital" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="email_envio" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="clave_email" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="smtp_email" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="puerto_email" Type="Int32" />
+    <Property Name="es_corporativo" Type="Boolean" />
+    <Property Name="ubigeo_distrito" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="es_agente_percepcion" Type="Boolean" />
+    <Property Name="es_agente_retencion" Type="Boolean" />
+    <Property Name="es_buen_contribuyente" Type="Boolean" />
+    <Property Name="homologado" Type="Boolean" />
+    <Property Name="en_pruebas" Type="Boolean" />
+    <Property Name="en_produccion" Type="Boolean" />
+    <Property Name="logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="sucursal" Relationship="facelModel.R_32" FromRole="empresa" ToRole="sucursal" />
+    <NavigationProperty Name="empresa_hijo" Relationship="facelModel.R_34" FromRole="empresa" ToRole="empresa1" />
+    <NavigationProperty Name="empresa_padre" Relationship="facelModel.R_34" FromRole="empresa1" ToRole="empresa" />
+    <Property Type="Boolean" Name="es_ssl" />
+  </EntityType>
+  <EntityType Name="forma_pago">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="dias" Type="Int32" />
+    <Property Name="es_default" Type="Boolean" />
+    <Property Name="activo" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="igv_vigente">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="porcentaje" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="fecha_registro" Type="DateTime" Precision="3" />
+    <Property Name="es_default" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="moneda">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="codigo_tributario" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="abreviado" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+    <NavigationProperty Name="tipo_cambio_origen" Relationship="facelModel.R_29" FromRole="moneda" ToRole="tipo_cambio" />
+    <NavigationProperty Name="tipo_cambio_destino" Relationship="facelModel.R_33" FromRole="moneda" ToRole="tipo_cambio" />
+  </EntityType>
+  <EntityType Name="sucursal">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id_empresa" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="direccion" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+    <Property Name="ubigeo" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="empresa" Relationship="facelModel.R_32" FromRole="sucursal" ToRole="empresa" />
+  </EntityType>
+  <EntityType Name="tipo_cambio">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="id_moneda_origen" Type="Int32" Nullable="false" />
+    <Property Name="id_moneda_destino" Type="Int32" Nullable="false" />
+    <Property Name="fecha" Type="DateTime" Precision="3" />
+    <Property Name="compra" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="venta" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="moneda_origen" Relationship="facelModel.R_29" FromRole="tipo_cambio" ToRole="moneda" />
+    <NavigationProperty Name="moneda_destino" Relationship="facelModel.R_33" FromRole="tipo_cambio" ToRole="moneda" />
+  </EntityType>
+  <EntityType Name="unidad_medida">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="abreviado" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="codigo_tributario" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+    <Property Name="activo" Type="Boolean" />
+  </EntityType>
+  <Association Name="R_30">
+    <End Role="documentos_venta" Type="facelModel.documentos_venta" Multiplicity="1" />
+    <End Role="documento_serie" Type="facelModel.documento_serie" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="documentos_venta">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="documento_serie">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="R_32">
+    <End Role="empresa" Type="facelModel.empresa" Multiplicity="1" />
+    <End Role="sucursal" Type="facelModel.sucursal" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="empresa">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="sucursal">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="R_34">
+    <End Role="empresa" Type="facelModel.empresa" Multiplicity="0..1" />
+    <End Role="empresa1" Type="facelModel.empresa" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="empresa">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="empresa1">
+        <PropertyRef Name="id_empresa_padre" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="R_29">
+    <End Role="moneda" Type="facelModel.moneda" Multiplicity="1" />
+    <End Role="tipo_cambio" Type="facelModel.tipo_cambio" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="moneda">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="tipo_cambio">
+        <PropertyRef Name="id_moneda_origen" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="R_33">
+    <End Role="moneda" Type="facelModel.moneda" Multiplicity="1" />
+    <End Role="tipo_cambio" Type="facelModel.tipo_cambio" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="moneda">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="tipo_cambio">
+        <PropertyRef Name="id_moneda_destino" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

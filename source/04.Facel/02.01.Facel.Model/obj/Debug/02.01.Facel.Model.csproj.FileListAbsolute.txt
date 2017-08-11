@@ -1,0 +1,11 @@
+C:\develop\new\source\04.Facel\02.01.Facel.Model\obj\Debug\02.01.Facel.Model.csprojResolveAssemblyReference.cache
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\04.02.01.Facel.Model.dll
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\04.02.01.Facel.Model.pdb
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\00.01.01.Library.Common.dll
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\00.02.01.Library.Framework.dll
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\04.01.01.Facel.Main.dll
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\00.01.01.Library.Common.pdb
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\00.02.01.Library.Framework.pdb
+C:\develop\new\source\04.Facel\02.01.Facel.Model\bin\Debug\04.01.01.Facel.Main.pdb
+C:\develop\new\source\04.Facel\02.01.Facel.Model\obj\Debug\04.02.01.Facel.Model.dll
+C:\develop\new\source\04.Facel\02.01.Facel.Model\obj\Debug\04.02.01.Facel.Model.pdb

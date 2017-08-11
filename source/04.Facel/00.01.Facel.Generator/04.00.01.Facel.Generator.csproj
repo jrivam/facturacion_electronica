@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1DCAA27-34EF-4E83-8F23-C8137E046B58}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Facel.Model</RootNamespace>
+    <AssemblyName>Facel.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Percepcion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Percepcion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Percepcion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Buenos_Contribuyentes_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Buenos_Contribuyentes_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Buenos_Contribuyentes_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Concepto_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Concepto_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Concepto_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documentos_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documentos_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documentos_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Identidad_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Identidad_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Identidad_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Empresa_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Empresa_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Empresa_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Forma_Pago_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Forma_Pago_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Forma_Pago_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Moneda_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Moneda_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Moneda_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Sucursal_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Sucursal_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Sucursal_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Unidad_Medida_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Unidad_Medida_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Unidad_Medida_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Agentes_Percepcion_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Agentes_Retencion_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Buenos_Contribuyentes_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Concepto_Venta_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Detracciones_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Documentos_Venta_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Documento_Identidad_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Documento_Serie_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Empresa_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Forma_Pago_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Igv_Vigente_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Moneda_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Sucursal_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Tipo_Cambio_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="B_Model\Unidad_Medida_BM.cs">
+      <DependentUpon>B_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Facel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Facel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="G_Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Library.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Facel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Facel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="B_Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>B_Model.cs</LastGenOutput>
+    </None>
+    <None Include="Facel.edmx.diagram">
+      <DependentUpon>Facel.edmx</DependentUpon>
+    </None>
+    <None Include="G_Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>G_Model.cs</LastGenOutput>
+    </None>
+    <None Include="Library.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Library.cs</LastGenOutput>
+    </None>
+    <None Include="Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="..\02.01.Facel.Model\1.Generated\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\00.Library\01.01.Library.Common\00.01.01.Library.Common.csproj">
+      <Project>{b9ec8e35-9954-4b43-8b40-25312854cf1c}</Project>
+      <Name>00.01.01.Library.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\00.Library\02.01.Library.Framework\00.02.01.Library.Framework.csproj">
+      <Project>{f97d54b8-b321-4d14-8ee8-a62f2c4d5b90}</Project>
+      <Name>00.02.01.Library.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

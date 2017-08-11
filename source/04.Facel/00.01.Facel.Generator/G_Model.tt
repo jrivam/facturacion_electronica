@@ -1,0 +1,1171 @@
+﻿<#
+//*********************************************************
+//
+//    Copyright (c) Microsoft. All rights reserved.
+//    This code is licensed under the Microsoft Public License.
+//    THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+//    ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+//    IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+//    PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+#>
+<#@ template language="C#" debug="false" hostspecific="true"#>
+<#@ include file="Library.tt"#>
+<#@ include file="Model.tt"#>
+<#@ output extension=".cs"#>
+<#
+
+CodeGenerationTools code = new CodeGenerationTools(this);
+MetadataLoader loader = new MetadataLoader(this);
+CodeRegion region = new CodeRegion(this, 1);
+MetadataTools ef = new MetadataTools(this);
+
+string namespaceName = GetName();
+string inputFile = namespaceName + @".edmx";
+EdmItemCollection ItemCollection = loader.CreateEdmItemCollection(inputFile);
+
+EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this);
+
+// Write out support code to primary template output file
+WriteHeader(fileManager, namespaceName, GetNamespaces("GModel"));
+BeginNamespace(namespaceName, code);
+SupportCode(namespaceName);
+
+EndNamespace(namespaceName);
+
+
+// Emit Entity Types
+foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e => e.Name))
+{
+    /////////////begin file generation 
+
+	if (1==1)
+	{
+	    fileManager.StartNewFile("..\\02.01." + namespaceName + ".Model\\1.Generated\\" + CaseToCamel(entity.Name) + "_GM.cs");
+
+#>
+//DataEntity
+<#
+BeginNamespace(namespaceName + ".Data.Entities", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : Entity<#if (IsID(entity))
+{#>Id<#}#>
+
+{
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID"))
+{
+    int i = 0;
+
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np =>
+        np.DeclaringType == entity &&
+        ((np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		np.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		np.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))))
+    {
+        foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+        {
+            var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+            EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+            if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+            {
+
+                if (i == 0)
+                {#><#				}
+                i++;#><#			}
+		}
+	}
+    if (i == 0)
+    {#>
+    protected internal <#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#> _<#=CaseToCamel(code.Escape(edmProperty), false)#>;
+    public virtual <#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#> <#=CaseToCamel(code.Escape(edmProperty), false)#>
+	{
+	    get { return _<#=CaseToCamel(code.Escape(edmProperty), false)#>; }
+	    set { if (value != _<#=CaseToCamel(code.Escape(edmProperty), false)#>) { _<#=CaseToCamel(code.Escape(edmProperty), false)#> = value; OnPropertyChanged("<#=CaseToCamel(code.Escape(edmProperty), false)#>"); } }
+    }	
+<#	}
+    else
+    {#>
+<#	}
+}
+#>
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID"))
+{
+    int i = 0;
+	
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np =>
+        np.DeclaringType == entity &&
+        ((np.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		np.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		np.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))))
+    {
+        foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+        {
+            var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+            EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+            if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+            {
+
+                if (i == 0)
+                {#>
+	protected internal <#=GetToDataTypeNull(code.Escape(p.TypeUsage))#> _<#=CaseToCamel(code.Escape(p), false)#>;
+	public virtual <#=GetToDataTypeNull(code.Escape(p.TypeUsage))#> <#=CaseToCamel(code.Escape(p), false)#>
+	{
+		get
+		{
+			return _<#=CaseToCamel(code.Escape(p), false)#>;
+		}
+		set
+		{
+            if (value != _<#=CaseToCamel(code.Escape(p), false)#>) 
+			{
+				_<#=CaseToCamel(code.Escape(p), false)#> = value;	
+				
+				<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>.<#=CaseToCamel(code.Escape(principalProperty), false)#> = _<#=CaseToCamel(code.Escape(p), false)#>;						
+<#				}
+                i++;#>	            
+				OnPropertyChanged("<#=CaseToCamel(code.Escape(p), false)#>");
+			}		
+<#			}
+		}
+	}
+    if (i == 0)
+    {#>
+<#	}
+    else
+    {#>
+		}
+	}	
+<#	}
+}
+#>
+
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+    {		
+#>
+	protected internal <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE _<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>;
+    public virtual <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE <#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>
+	{
+        get 
+        {
+			if (_<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#> == null) _<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#> = new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE();
+			
+			if (!_<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>.Loaded && <#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    int i = 0;
+    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+    {
+        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+        if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+        {
+            if (i > 0)
+            {#> &&
+			<#}#><#=CaseToCamel(code.Escape(p), false)#> != null<#
+            i++;#>
+<#		}
+    }
+}
+#>)
+			{	
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    int i = 0;
+    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+    {
+        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+        if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+        {
+            if (i == 0)
+            {#>
+				_<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>.<#=CaseToCamel(code.Escape(principalProperty), false)#> = <#=CaseToCamel(code.Escape(p), false)#>;
+<#			}
+            i++;#>
+<#		}
+    }
+}
+#>
+ 
+                new <#=DelPadreHijo(CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType())))#>_BL().Load(_<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>);
+			}
+				
+            return _<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>;
+        } 
+		set
+		{
+            if (value != _<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>) 
+			{
+				_<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#> = value;
+				
+				<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    int i = 0;
+    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+    {
+        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+        if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+        {
+            if (i == 0)
+            {#>
+<#			}
+            i++;#><#=CaseToCamel(code.Escape(p), false)#> = _<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>.<#=CaseToCamel(code.Escape(principalProperty), false)#>;
+<#		}
+    }
+}
+#>
+            
+				OnPropertyChanged("<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#>");
+			}
+		}
+	}
+<#	}
+}
+#>
+
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One))
+    {		
+#>
+    public virtual ObservableCollection<<#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE> <#=GetPlural(DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty))))#>Get(int paramMaxDepth = 1)
+	{
+		if (<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    int i = 0;
+    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+    {
+        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+        if (CaseToCamel(code.Escape(principalProperty)) == CaseToCamel(code.Escape(edmProperty)))
+        {
+            if (i > 0)
+            {#>&& <#}
+            i++;#>this.<#=CaseToCamel(code.Escape(principalProperty), false)#> != null<#
+		}
+    }
+}
+#>)
+            return new ObservableCollection<<#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE>(new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FL().LoadConvert(new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FE() { <#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    int i = 0;
+    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+    {
+        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+        if (CaseToCamel(code.Escape(principalProperty)) == CaseToCamel(code.Escape(edmProperty)))
+        {
+            if (i > 0)
+            {#>, <#}
+            i++;#><#=CaseToCamel(code.Escape(p), false)#> = new Filter<<#=GetToDataTypeNull(code.Escape(p.TypeUsage))#>>(this.<#=CaseToCamel(code.Escape(principalProperty))#>)<#
+		}
+    }
+}
+#> }, paramMaxDepth));	
+
+        return new ObservableCollection<<#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE>();
+	}
+    public virtual ObservableCollection<<#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE> <#=GetPlural(DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty))))#>Load(int paramMaxDepth = 1)
+	{
+		return <#=GetPlural(DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty))))#> = <#=GetPlural(DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty))))#>Get(paramMaxDepth);
+	}	
+    public virtual ObservableCollection<<#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE> <#=GetPlural(DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty))))#> { get; set; }
+<#	}
+}
+#>
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+BeginNamespace(namespaceName + ".Business.Entities", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : <#=CaseToCamel(code.Escape(entity))#>_DE
+{
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+//DataAccess
+<#
+BeginNamespace(namespaceName + ".Data.Accesses", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : AccessEntity<#if (IsID(entity))
+{#>Id<#}#>
+
+{
+	<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_DA(string paramTableName, string paramConnectionStringName)
+        : base(paramTableName, paramConnectionStringName)
+	{
+	}
+
+    protected override Entity GetDE()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_DE();
+    }
+
+    public override List<Field> GetFieldsData(Entity paramDE, bool paramIsSourceColumn = false, 
+		string paramTableAlias = "")
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+        List<Field> fields = new List<Field>();
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && !ef.IsKey(p)))
+{
+#>
+        fields = AddField<<#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#>>(fields, "<#=code.Escape(edmProperty)#>", System.Data.DbType.<#=code.Escape(edmProperty.TypeUsage.EdmType)#>, be.<#=CaseToCamel(code.Escape(edmProperty), false)#>, paramIsSourceColumn, paramTableAlias<#if (ef.IsKey(edmProperty))
+{#>, System.Data.ParameterDirection.InputOutput<#}#>);
+<#
+}
+#>        
+		return fields;
+    }
+
+    protected override Entity LoadDataReader(DbDataReader paramReader, Entity paramDE)
+	{
+        <#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && !ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToDataType(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>(paramReader[TableColumn("<#=code.Escape(edmProperty)#>")]);
+<#
+}
+#>  
+        return be;
+	}
+    protected override Entity LoadDataRow(DataRow paramRow, Entity paramDE)
+	{
+        <#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && !ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToDataType(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>(paramRow[TableColumn("<#=code.Escape(edmProperty)#>")]);
+<#
+}
+#>  
+        return be;
+	}
+    protected override Entity LoadDataParameters(DbParameterCollection paramParameters, Entity paramDE)
+	{
+        <#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && !ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToDataType(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>(paramParameters[TableParameter("<#=code.Escape(edmProperty)#>")].Value);
+<#
+}
+#>  
+        return be;
+	}
+
+    protected override Entity ClearData(Entity paramDE)
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && !ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToNull(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>;
+<#
+}
+#>  
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+    {		
+#>
+		be._<#=DelPadreHijo(CaseToCamelWOPrefix(code.Escape(navProperty)))#> = null;
+<#
+	}
+}
+#>
+
+        return be;
+    }
+
+<#
+if (entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)).Count() > 0)
+{
+#>
+    public override bool KeyIsEmpty(Entity paramDE)
+    {
+		<#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+        return (<#
+int count = 0;
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+    if (count > 0)
+    {#> && <#}
+#>be.<#=CaseToCamel(code.Escape(edmProperty), false)#> == <#=ConvertToNull(code.Escape(edmProperty.TypeUsage))#><#count++;
+}
+#>);
+    }
+    public override List<Field> GetFieldsKey(Entity paramDE, bool paramIsSourceColumn = false, 
+		string paramTableAlias = "")
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+        List<Field> fields = new List<Field>();
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+#>
+        fields = AddField<<#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#>>(fields, "<#=code.Escape(edmProperty)#>", System.Data.DbType.<#=code.Escape(edmProperty.TypeUsage.EdmType)#>, be.<#=CaseToCamel(code.Escape(edmProperty), false)#>, paramIsSourceColumn, paramTableAlias<#if (ef.IsKey(edmProperty))
+{#>, System.Data.ParameterDirection.InputOutput<#}#>);
+<#
+}
+#>
+		
+		return fields;
+    }
+
+    protected override Entity LoadKeyReader(DbDataReader paramReader, Entity paramDE)
+    {
+		<#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToDataType(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>(paramReader[TableColumn("<#=code.Escape(edmProperty)#>")]);
+<#
+}
+#> 
+        return be;
+    }
+    protected override Entity LoadKeyRow(DataRow paramRow, Entity paramDE)
+    {
+		<#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToDataType(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>(paramRow[TableColumn("<#=code.Escape(edmProperty)#>")]);
+<#
+}
+#> 
+        return be;
+    }
+
+    protected override Entity LoadKeyParameters(DbParameterCollection paramParameters, Entity paramDE)
+    {
+		<#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToDataType(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>(paramParameters[TableParameter("<#=code.Escape(edmProperty)#>")].Value);
+<#
+}
+#> 
+        return be;
+    }
+
+    protected override Entity ClearKey(Entity paramDE)
+    {
+		<#=CaseToCamel(code.Escape(entity))#>_DE be = (<#=CaseToCamel(code.Escape(entity))#>_DE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+#>
+		be._<#=CaseToCamel(code.Escape(edmProperty), false)#> = <#=ConvertToNull(GetToDataTypeNull(code.Escape(edmProperty.TypeUsage)))#>;
+<#
+}
+#>       
+        return be; 
+    }
+<#
+}
+#>
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+BeginNamespace(namespaceName + ".Business.Accesses", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : <#=CaseToCamel(code.Escape(entity))#>_DA
+{
+	<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_BA(string paramTableName, string paramConnectionStringName)
+        : base(paramTableName, paramConnectionStringName)
+	{
+	}
+	
+	protected override Entity GetDE()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_BE();
+    }
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+//DataLogic
+<#
+BeginNamespace(namespaceName + ".Data.Logics", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : LogicEntity
+{
+    protected override Access GetDA()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_DA(TableName, ConnectionStringName);
+    }
+	
+	protected override bool ValidateInsertModel(Entity paramDE, ref string paramField, ref string paramMessage)
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() == "CODIGO" && !ef.IsKey(p)))
+{
+#>
+        if (string.IsNullOrWhiteSpace(be.<#=CaseToCamel(code.Escape(edmProperty.Name), false)#>))
+        {
+            paramField = "<#=CaseToCamel(code.Escape(edmProperty.Name))#>";
+            paramMessage = LibraryFramework.V0003_CodeEmpty;
+
+            return false;
+        }
+		
+        if (Count(new <#=CaseToCamel(code.Escape(entity))#>_BE() { <#=CaseToCamel(code.Escape(edmProperty.Name))#> = be.<#=CaseToCamel(code.Escape(edmProperty.Name), false)#><#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
+    {
+        foreach (EdmProperty edmProperty1 in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+        {
+            int i = 0;
+            foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+            {
+                var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+                EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+                if (CaseToCamel(code.Escape(principalProperty)) == CaseToCamel(code.Escape(edmProperty1)))
+                {
+                    if (i > 0)
+                    {#><#}
+                    i++;#>, <#=CaseToCamel(code.Escape(p), false)#> = be.<#=CaseToCamel(code.Escape(p), false)#><#
+}
+            }
+        }
+    }
+}
+#> }) > 0)
+        {
+            paramField = "<#=CaseToCamel(code.Escape(edmProperty.Name), false)#>";
+            paramMessage = LibraryFramework.V0004_CodeExists;
+            return false;
+        }		
+<#
+}
+#>
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID"))
+{
+    int i = 0;
+
+
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np =>
+        np.DeclaringType == entity &&
+        np.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One))
+    {
+        foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+        {
+            var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+            EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+            if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+            {
+
+                if (i == 0)
+                {#>
+<#				}
+                i++;#>		
+        if (be.<#=CaseToCamel(code.Escape(p), false)#> == null)
+        {
+            paramField = "<#=CaseToCamel(code.Escape(p), false)#>";
+			paramMessage = LibraryFramework.V0005_FieldEmpty;
+
+            return false;
+        }								
+<#
+			}
+        }
+    }
+    if (i == 0)
+    {#>
+<#	}
+    else
+    {#>
+<#	}
+}
+#>  
+		return base.ValidateInsertModel(paramDE, ref paramField, ref paramMessage);
+    }
+	protected override bool ValidateDeleteModel(Entity paramDE, ref string paramField, ref string paramMessage, bool paramValidateCascadeIntegrity = true)
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+
+        if (paramValidateCascadeIntegrity)
+        {
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One))
+    {	
+	    if (!CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType())).StartsWith(GetName() + "_Vw"))
+        {
+#>
+            if (new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BL().Count(new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE() { <#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    int i = 0;
+    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+    {
+        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+        if (CaseToCamel(code.Escape(principalProperty)) == CaseToCamel(code.Escape(edmProperty)))
+        {
+            if (i > 0)
+            {#>, <#}
+            i++;#><#=CaseToCamel(code.Escape(p), false)#> = be.<#=CaseToCamel(code.Escape(principalProperty), false)#><#
+		}
+    }
+}
+#> }) > 0)
+            {
+                paramField = "<#=CaseToCamelWOPrefix(code.Escape(navProperty.ToEndMember.GetEntityType()))#>";
+				paramMessage = LibraryFramework.V0006_TableDependencies;
+
+                return false;
+            }
+<#	    }
+    }
+}
+#>
+        }
+			     
+        return base.ValidateDeleteModel(paramDE, ref paramField, ref paramMessage, paramValidateCascadeIntegrity);
+    }
+	
+	public override byte EraseModel(Entity paramDE, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+    {
+        byte ret = 1;
+
+		<#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+
+		foreach (<#=CaseToCamel(code.Escape(entity))#>_BE e in new <#=CaseToCamel(code.Escape(entity))#>_FL().LoadConvert(new <#=CaseToCamel(code.Escape(entity))#>_FL().Convert(be), 1))
+		{
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One))
+    {	
+	    if (!CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType())).StartsWith(GetName() + "_Vw"))
+        {
+#>
+			if (ret == 1)
+	            ret = new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BL().Erase(new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_BE() { <#
+	                foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+	                {
+	                    int i = 0;
+	                    foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+	                    {
+	                        var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+	                        EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);						
+	                        if (CaseToCamel(code.Escape(principalProperty)) == CaseToCamel(code.Escape(edmProperty)))
+	                        {
+	                            if (i > 0)
+	                            {#>, <#}
+	                            i++;#><#=CaseToCamel(code.Escape(p), false)#> = e.<#=CaseToCamel(code.Escape(principalProperty), false)#><#
+	                        }
+	                    }
+	                }
+	#> }, false, paramIsSourceColumn); 
+<#            }
+    }                   
+}
+#> 		}
+		
+		if (ret == 1)
+            ret = base.EraseModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
+        
+		return ret;
+    }	
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+BeginNamespace(namespaceName + ".Business.Logics", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : <#=CaseToCamel(code.Escape(entity))#>_DL
+{
+    protected override Access GetDA()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_BA(TableName, ConnectionStringName);
+    }	
+}
+
+<#
+EndNamespace(namespaceName);
+#>
+
+//JoinEntities
+<#
+BeginNamespace(namespaceName + ".Join.Entities", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : Enumerate<#if (IsID(entity))
+{#>Id<#}#>
+
+{
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID"))
+{
+#>
+    public virtual Filter<<#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#>> <#=CaseToCamel(code.Escape(edmProperty), false)#> { get; set; }
+<#
+}
+#>
+
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if ((navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
+    {		
+#>
+	protected <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FE _<#=CaseToCamelWOPrefix(code.Escape(navProperty))#>;
+    public <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FE <#=CaseToCamelWOPrefix(code.Escape(navProperty))#>
+	{
+        get 
+        {
+            _<#=CaseToCamelWOPrefix(code.Escape(navProperty))#> = _<#=CaseToCamelWOPrefix(code.Escape(navProperty))#> ?? new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FE();
+            return _<#=CaseToCamelWOPrefix(code.Escape(navProperty))#>;
+        } 
+		set
+		{
+			_<#=CaseToCamelWOPrefix(code.Escape(navProperty))#> = value;
+		}
+	}
+<#}
+}
+#>
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+BeginNamespace(namespaceName + ".Filter.Entities", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : <#=CaseToCamel(code.Escape(entity))#>_JE
+{
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+
+//JoinAccess
+<#
+BeginNamespace(namespaceName + ".Join.Accesses", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : AccessEnumerate<#if (IsID(entity))
+{#>Id<#}#>
+
+{	
+	<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_JA(string paramTableName, string paramConnectionStringName)
+        : base(paramTableName, paramConnectionStringName)
+	{
+	}
+	
+	protected override Entity GetDE()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_DE();
+    }
+	protected override Access GetDA()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_DA(TableName, ConnectionStringName);
+    }
+	
+	public override List<Field> GetFieldsData(Enumerate paramDE, bool paramIsSourceColumn = false, 
+		string paramTableAlias = "")
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_JE be = (<#=CaseToCamel(code.Escape(entity))#>_JE)paramDE;
+
+        List<Field> fields = new List<Field>();
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && !ef.IsKey(p)))
+{
+#>
+        fields = AddField<<#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#>>(fields, "<#=code.Escape(edmProperty)#>", System.Data.DbType.<#=code.Escape(edmProperty.TypeUsage.EdmType)#>, be.<#=CaseToCamel(code.Escape(edmProperty), false)#>, paramIsSourceColumn, paramTableAlias);
+<#
+}
+#>        
+		return fields;
+    }
+	
+	protected override List<Field> GetFieldsJoin(List<Field> paramFields, Enumerate paramDE, int paramDepth, int paramMaxDepth = 0, bool paramIsSourceColumn = false, 
+		string paramTableAlias = "")
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_FE be = (<#=CaseToCamel(code.Escape(entity))#>_FE)paramDE;
+		
+<#
+foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+{
+    if (((navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many)) && 
+		!navProperty.Name.ToLower().Contains("padre"))
+    {		
+#>
+		foreach (Field f in new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FL().GetFieldsJoin(be.<#=CaseToCamelWOPrefix(code.Escape(navProperty))#>, paramDepth, paramMaxDepth, paramIsSourceColumn, paramTableAlias + "__<#=code.Escape(navProperty)#>"))
+    		paramFields.Add(f);
+<#}
+}
+#>
+        
+		return paramFields;
+	}
+	protected override string GetTablesJoin(string paramTables, Enumerate paramDE, int paramDepth, int paramMaxDepth = 0, bool paramIsSourceColumn = false, 
+		string paramTableAlias = "",
+		Dictionary<string, string> paramFieldsJoin = null)
+    {
+		<#=CaseToCamel(code.Escape(entity))#>_FE be = (<#=CaseToCamel(code.Escape(entity))#>_FE)paramDE;	
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity))
+{
+    foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+    {
+		int i = 0;
+    if (((navProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many && 
+		navProperty.FromEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many) ||
+		(navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One && 
+		navProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many)) && 
+		!navProperty.Name.ToLower().Contains("padre"))
+        {
+            foreach (var fromProperty in ef.GetPrincipalProperties(navProperty))
+            {
+                var p = ef.GetCorrespondingDependentProperty(navProperty, fromProperty);
+                EdmProperty principalProperty = ef.GetCorrespondingPrincipalProperty(navProperty, p);
+
+                if (CaseToCamel(code.Escape(p)) == CaseToCamel(code.Escape(edmProperty)))
+                {
+
+                    if (i == 0)
+                    {#>	
+		paramTables += new <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>_FL().GetTablesJoin(be.<#=CaseToCamelWOPrefix(code.Escape(navProperty))#>, paramDepth, paramMaxDepth, paramIsSourceColumn, paramTableAlias, paramTableAlias + "__<#=code.Escape(navProperty)#>", new Dictionary<string, string>() {<#}
+                    else
+                    {#>, <#} i++;#> { "<#=code.Escape(p)#>", "<#=code.Escape(principalProperty)#>" }<#}
+            }
+    if (i > 0)
+    {#> });<#	}		
+        }
+    }
+}
+#>
+
+
+		return paramTables;
+	}	
+<#
+if (entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)).Count() > 0)
+{
+#>
+    public override List<Field> GetFieldsKey(Enumerate paramDE, bool paramIsSourceColumn = false, 
+		string paramTableAlias = "")
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_JE be = (<#=CaseToCamel(code.Escape(entity))#>_JE)paramDE;
+
+        List<Field> fields = new List<Field>();
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() != "ID" && ef.IsKey(p)))
+{
+#>
+        fields = AddField<<#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#>>(fields, "<#=code.Escape(edmProperty)#>", System.Data.DbType.<#=code.Escape(edmProperty.TypeUsage.EdmType)#>, be.<#=CaseToCamel(code.Escape(edmProperty), false)#>, paramIsSourceColumn, paramTableAlias);
+<#
+}
+#>
+		
+		return fields;
+    }
+<#
+}
+#>		
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+BeginNamespace(namespaceName + ".Filter.Accesses", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : <#=CaseToCamel(code.Escape(entity))#>_JA
+{	
+	<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_FA(string paramTableName, string paramConnectionStringName)
+        : base(paramTableName, paramConnectionStringName)
+	{
+	}
+	
+	protected override Entity GetDE()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_BE();
+    }
+	protected override Access GetDA()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_BA(TableName, ConnectionStringName);
+    }
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+
+//JoinLogic
+<#
+BeginNamespace(namespaceName + ".Join.Logics", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : LogicEnumerate
+{
+	protected override Access GetDA()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_JA(TableName, ConnectionStringName);
+    }
+	
+	public ObservableCollection<<#=CaseToCamel(code.Escape(entity))#>_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
+            int paramTop = 0,
+			int paramRowFrom = 0, int paramRowTo = 0)
+    {
+    	return new ObservableCollection<<#=CaseToCamel(code.Escape(entity))#>_BE>(Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
+                paramTop,
+				paramRowFrom, paramRowTo).ConvertAll(x => x as <#=CaseToCamel(code.Escape(entity))#>_BE));
+    }
+	public <#=CaseToCamel(code.Escape(entity))#>_FE Convert(<#=CaseToCamel(code.Escape(entity))#>_BE paramDE)
+    {
+        <#=CaseToCamel(code.Escape(entity))#>_FE be = new <#=CaseToCamel(code.Escape(entity))#>_FE();
+
+<#
+foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType))
+{
+#>
+		be.<#=CaseToCamel(code.Escape(edmProperty), false)#> = new Filter<<#=GetToDataTypeNull(code.Escape(edmProperty.TypeUsage))#>>(paramDE.<#=CaseToCamel(code.Escape(edmProperty), false)#>);
+<#
+}
+#>  
+        return be;
+    }	
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+BeginNamespace(namespaceName + ".Filter.Logics", code);
+#>
+[Serializable]
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#> : <#=CaseToCamel(code.Escape(entity))#>_JL
+{
+	protected override Access GetDA()
+    {
+        return new <#=CaseToCamel(code.Escape(entity))#>_FA(TableName, ConnectionStringName);
+    }
+}
+<#
+EndNamespace(namespaceName);
+#>
+
+<#
+/////////////end file generation
+	}
+}
+fileManager.Process();
+#>
+
+<#+
+void WriteHeader(EntityFrameworkTemplateFileManager fileManager, string namespaceName, params string[] extraUsings)
+{
+    fileManager.StartHeader();
+#>
+//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated from a template.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Collections.ObjectModel;
+using Library.Common.Data;
+using Library.Framework;
+using Library.Framework.Layers;
+using Library.Framework.Data;
+
+using <#=namespaceName#>.Data.Entities;
+using <#=namespaceName#>.Data.Accesses;
+using <#=namespaceName#>.Data.Logics;
+using <#=namespaceName#>.Business.Entities;
+using <#=namespaceName#>.Business.Accesses;
+using <#=namespaceName#>.Business.Logics;
+using <#=namespaceName#>.Join.Entities;
+using <#=namespaceName#>.Join.Accesses;
+using <#=namespaceName#>.Join.Logics;
+using <#=namespaceName#>.Filter.Entities;
+using <#=namespaceName#>.Filter.Accesses;
+using <#=namespaceName#>.Filter.Logics;
+using <#=namespaceName#>.Main;
+
+<#=String.Join(String.Empty, extraUsings.Select(u => "using " + u + ";" + Environment.NewLine).ToArray())#>
+<#+
+fileManager.EndBlock();
+}
+void SupportCode(string namespaceName)
+{
+#>
+
+//////
+
+<#+
+}
+
+void BeginNamespace(string namespaceName, CodeGenerationTools code)
+{
+    CodeRegion region = new CodeRegion(this);
+    if (!String.IsNullOrEmpty(namespaceName))
+    {
+#>
+namespace <#=code.EscapeNamespace(namespaceName)#>
+{
+<#+
+PushIndent(CodeRegion.GetIndent(1));
+    }
+}
+
+
+void EndNamespace(string namespaceName)
+{
+    if (!String.IsNullOrEmpty(namespaceName))
+    {
+        PopIndent();
+#>
+}
+<#+
+    }
+}
+
+bool IsReadWriteAccessibleProperty(EdmMember member)
+{
+    string setter = Accessibility.ForWriteOnlyProperty(member);
+    string getter = Accessibility.ForReadOnlyProperty(member);
+
+    return getter != "private" && getter != "protected" && setter != "private" && setter != "protected";
+}
+
+string PropertyVirtualModifier(string accessibility)
+{
+    return accessibility + (accessibility != "private" ? " virtual" : "");
+}
+
+bool VerifyTypesAreCaseInsensitiveUnique(EdmItemCollection itemCollection)
+{
+    Dictionary<string, bool> alreadySeen = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+    foreach(StructuralType type in itemCollection.GetItems<StructuralType>())
+    {
+        if (!(type is EntityType || type is ComplexType))
+        {
+            continue;
+        }
+
+        if (alreadySeen.ContainsKey(type.FullName))
+        {
+            Error(String.Format(CultureInfo.CurrentCulture, "This template does not support types that differ only by case, the types {0} are not supported", type.FullName));
+            return false;
+        }
+        else
+        {
+            alreadySeen.Add(type.FullName, true);
+        }
+
+    }
+
+    return true;
+}
+#>
