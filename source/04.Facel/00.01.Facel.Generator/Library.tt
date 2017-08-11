@@ -1,0 +1,251 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ include file="EF.Utility.CS.ttinclude"#>
+<#@ output extension=".cs" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ assembly name="$(SolutionDir)..\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll" #>
+<#@ assembly name="$(SolutionDir)..\00.Library\02.01.Library.Framework\bin\Debug\00.02.01.Library.Framework.dll" #>
+
+<#+
+bool IsID(EntityType entity)
+{
+	bool isid = false;
+	foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.EdmType is PrimitiveType && p.DeclaringType == entity && p.Name.ToUpper() == "ID"))
+	{
+		isid = true;
+	}
+	return isid;
+}
+#>
+<#+
+string GetPlural(string paramName)
+{
+        if (paramName.EndsWith("s"))
+            return paramName;
+        if (!(paramName.EndsWith("a") || paramName.EndsWith("e") || paramName.EndsWith("i") || paramName.EndsWith("o") || paramName.EndsWith("u")))
+            paramName += "e";
+        return paramName += "s";
+}
+#>
+<#+
+string GetAncestor(EntityType entity, string paramNameExtended)
+{
+	string Text = "";
+	
+	foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np => np.DeclaringType == entity))
+    {
+        if (navProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One)
+        {
+			Text += GetAncestor(navProperty.ToEndMember.GetEntityType(), paramNameExtended) + ", ";
+		}
+	}	
+	return "new " + "entity_" + GetExtended(entity.ToString(), ".") + "(" + Text + "\"" + GetExtended(entity.ToString(), ".") + paramNameExtended + "\")";
+}
+#>
+
+
+
+<#+
+string GetExtended(string sentity, string separator)
+{
+	int ipoint = sentity.IndexOf(separator);
+	return sentity.Substring(ipoint + 1, sentity.Length - ipoint - 1);
+}
+#>
+<#+
+string GetNavigation(NavigationProperty navigation)
+{
+	return navigation.ToString();
+}
+#>
+
+<#+
+string GetEntityForeign(string paramEntity, string paramEntityForeign, string paramField)
+{
+	return paramField.Substring(0, paramField.IndexOf(paramEntityForeign.Substring(paramEntity.Length, paramEntityForeign.Length - paramEntity.Length)));
+}
+#>
+
+<#+
+string DelPadreHijo(string paramText)
+{
+    if (paramText.ToLower().Contains("padre"))
+            paramText = paramText.Substring(0, paramText.ToLower().IndexOf("padre"));
+//    if (paramText.ToLower().Contains("hijo"))
+//            paramText = paramText.Substring(0, paramText.ToLower().IndexOf("hijo"));
+
+    return paramText;
+}
+#>
+<#+
+string CaseToCamel(string paramText, bool paramFirst = true)
+{
+    bool bUpper = true;
+	bool bFirst = true;
+    string sCamel = string.Empty;
+	
+    for (int i = 0; i < paramText.Length; i++)
+    {
+        if (paramText[i] == '_' || paramText[i] == '-' || paramText[i] == ' ')
+        {
+           	if (paramFirst && bFirst)
+			{
+				sCamel += paramText[i].ToString();
+				bFirst = false;
+			}
+			bUpper = true;
+        }
+		else
+		{
+			if (bUpper)
+	        {
+	            sCamel += paramText[i].ToString().ToUpper();
+	            bUpper = false;
+	        }
+	        else
+	            sCamel += paramText[i].ToString();
+		}
+	}
+
+    return sCamel;
+}
+#>
+<#+
+string CaseToCamelWOPrefix(string paramText)
+{
+	bool bSkip = true;
+    bool bUpper = true;
+    string sCamel = string.Empty;
+	
+    for (int i = 0; i < paramText.Length; i++)
+    {
+        if (paramText[i] == '_' || paramText[i] == '-' || paramText[i] == ' ')
+        {
+			bSkip = false;
+			bUpper = true;
+        }
+		else
+		{
+				if (bUpper)
+		        {
+		            sCamel += paramText[i].ToString().ToUpper();
+		            bUpper = false;
+		        }
+		        else
+		            sCamel += paramText[i].ToString();
+		}
+	}
+
+    return sCamel;
+}
+#>
+<#+
+string ConvertToDataType(string paramDataType)
+{
+	return "Conversion.To<" + paramDataType + ">";
+}
+#>
+<#+
+string ConvertToDataTypeStd(string paramDataType)
+{
+	if (paramDataType == "System.DateTime" || paramDataType == "DateTime") 
+		return "Convert.ToDateTime";
+	else if (paramDataType == "int") 
+		return "Convert.ToInt32";
+	else if (paramDataType == "double") 
+		return "Convert.ToDouble";
+	else if (paramDataType == "decimal") 
+		return "Convert.ToDecimal";
+	else if (paramDataType == "bool") 
+		return "Convert.ToBoolean";
+	else if (paramDataType == "string") 
+		return "Convert.ToString";
+	else
+		return paramDataType;
+}
+#>
+<#+
+string GetToDataTypeStd(string paramDataType)
+{
+	if (paramDataType == "Nullable<System.DateTime>" || paramDataType == "System.DateTime" || paramDataType == "DateTime") 
+		return "DateTime";
+	else if (paramDataType == "Nullable<int>" || paramDataType == "int") 
+		return "int";
+	else if (paramDataType == "Nullable<double>" || paramDataType == "double") 
+		return "double";
+	else if (paramDataType == "Nullable<decimal>" || paramDataType == "decimal") 
+		return "double";
+	else if (paramDataType == "Nullable<bool>" || paramDataType == "bool") 
+		return "bool";
+	else if (paramDataType == "string") 
+		return "string";
+	else
+		return paramDataType;
+}
+#>
+<#+
+string GetToDataTypeView(string paramDataType)
+{
+	if (paramDataType == "Nullable<System.DateTime>" || paramDataType == "System.DateTime" || paramDataType == "DateTime") 
+		return "Nullable<DateTime>";
+	else if (paramDataType == "Nullable<int>" || paramDataType == "int") 
+		return "string";
+	else if (paramDataType == "Nullable<double>" || paramDataType == "double") 
+		return "string";
+	else if (paramDataType == "Nullable<decimal>" || paramDataType == "decimal") 
+		return "string";
+	else if (paramDataType == "Nullable<bool>" || paramDataType == "bool") 
+		return "Nullable<bool>";
+	else if (paramDataType == "string") 
+		return "string";
+	else if (paramDataType == "byte[]") 
+		return "byte[]";
+	else
+		return paramDataType;
+}
+#>
+<#+
+string GetToDataTypeNull(string paramDataType)
+{
+	if (paramDataType == "Nullable<System.DateTime>" || paramDataType == "System.DateTime" || paramDataType == "DateTime") 
+		return "Nullable<System.DateTime>";
+	else if (paramDataType == "Nullable<int>" || paramDataType == "int") 
+		return "Nullable<int>";
+	else if (paramDataType == "Nullable<double>" || paramDataType == "double") 
+		return "Nullable<double>";
+	else if (paramDataType == "Nullable<decimal>" || paramDataType == "decimal") 
+		return "Nullable<decimal>";
+	else if (paramDataType == "Nullable<bool>" || paramDataType == "bool") 
+		return "Nullable<bool>";
+	else if (paramDataType == "string") 
+		return "string";
+	else if (paramDataType == "byte[]") 
+		return "byte[]";
+	else
+		return paramDataType;
+}
+#>
+<#+
+string ConvertToNull(string paramDataType)
+{
+	if (paramDataType == "Nullable<System.DateTime>" || paramDataType == "System.DateTime" || paramDataType == "DateTime") 
+		return "null";
+	else if (paramDataType == "Nullable<int>" || paramDataType == "int") 
+		return "null";
+	else if (paramDataType == "Nullable<double>" || paramDataType == "double") 
+		return "null";
+	else if (paramDataType == "Nullable<decimal>" || paramDataType == "decimal") 
+		return "null";	
+	else if (paramDataType == "Nullable<bool>" || paramDataType == "bool") 
+		return "null";
+	else if (paramDataType == "string") 
+		return "null";
+	else if (paramDataType == "byte[]") 
+		return "null";
+	else
+		return "null";
+}
+#>

@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="facelModelStoreContainer" CdmEntityContainer="facelEntities">
+    <EntitySetMapping Name="agentes_percepcion">
+      <EntityTypeMapping TypeName="facelModel.agentes_percepcion">
+        <MappingFragment StoreEntitySet="agentes_percepcion">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="ruc" ColumnName="ruc" />
+          <ScalarProperty Name="razon_social" ColumnName="razon_social" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="agentes_retencion">
+      <EntityTypeMapping TypeName="facelModel.agentes_retencion">
+        <MappingFragment StoreEntitySet="agentes_retencion">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="ruc" ColumnName="ruc" />
+          <ScalarProperty Name="razon_social" ColumnName="razon_social" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="buenos_contribuyentes">
+      <EntityTypeMapping TypeName="facelModel.buenos_contribuyentes">
+        <MappingFragment StoreEntitySet="buenos_contribuyentes">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="ruc" ColumnName="ruc" />
+          <ScalarProperty Name="razon_social" ColumnName="razon_social" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="concepto_venta">
+      <EntityTypeMapping TypeName="facelModel.concepto_venta">
+        <MappingFragment StoreEntitySet="concepto_venta">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+          <ScalarProperty Name="es_default" ColumnName="es_default" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="detracciones">
+      <EntityTypeMapping TypeName="facelModel.detracciones">
+        <MappingFragment StoreEntitySet="detracciones">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+          <ScalarProperty Name="tope_importe" ColumnName="tope_importe" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="documento_identidad">
+      <EntityTypeMapping TypeName="facelModel.documento_identidad">
+        <MappingFragment StoreEntitySet="documento_identidad">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="abreviado" ColumnName="abreviado" />
+          <ScalarProperty Name="codigo_tributario" ColumnName="codigo_tributario" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="documento_serie">
+      <EntityTypeMapping TypeName="facelModel.documento_serie">
+        <MappingFragment StoreEntitySet="documento_serie">
+          <ScalarProperty Name="id_documento_venta" ColumnName="id_documento_venta" />
+          <ScalarProperty Name="serie" ColumnName="serie" />
+          <ScalarProperty Name="numero_actual" ColumnName="numero_actual" />
+          <ScalarProperty Name="es_electronico" ColumnName="es_electronico" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="documentos_venta">
+      <EntityTypeMapping TypeName="facelModel.documentos_venta">
+        <MappingFragment StoreEntitySet="documentos_venta">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="abreviado" ColumnName="abreviado" />
+          <ScalarProperty Name="codigo_tributario" ColumnName="codigo_tributario" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+          <ScalarProperty Name="es_nota_debito" ColumnName="es_nota_debito" />
+          <ScalarProperty Name="calcula_igv" ColumnName="calcula_igv" />
+          <ScalarProperty Name="es_comprobante_retencion" ColumnName="es_comprobante_retencion" />
+          <ScalarProperty Name="es_ticket_punto_venta" ColumnName="es_ticket_punto_venta" />
+          <ScalarProperty Name="es_recibo_por_honorarios" ColumnName="es_recibo_por_honorarios" />
+          <ScalarProperty Name="es_comprobante_percepcion" ColumnName="es_comprobante_percepcion" />
+          <ScalarProperty Name="es_factura_negociable" ColumnName="es_factura_negociable" />
+          <ScalarProperty Name="es_nota_credito" ColumnName="es_nota_credito" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="empresa">
+      <EntityTypeMapping TypeName="facelModel.empresa">
+        <MappingFragment StoreEntitySet="empresa">
+          <ScalarProperty Name="es_ssl" ColumnName="es_ssl" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_empresa_padre" ColumnName="id_empresa_padre" />
+          <ScalarProperty Name="ruc" ColumnName="ruc" />
+          <ScalarProperty Name="razon_social" ColumnName="razon_social" />
+          <ScalarProperty Name="direccion" ColumnName="direccion" />
+          <ScalarProperty Name="direccion_fiscal" ColumnName="direccion_fiscal" />
+          <ScalarProperty Name="telefono" ColumnName="telefono" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="website" ColumnName="website" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+          <ScalarProperty Name="es_emisor_electronico" ColumnName="es_emisor_electronico" />
+          <ScalarProperty Name="usuario_sunat" ColumnName="usuario_sunat" />
+          <ScalarProperty Name="clave_sunat" ColumnName="clave_sunat" />
+          <ScalarProperty Name="ruta_firma_digital" ColumnName="ruta_firma_digital" />
+          <ScalarProperty Name="email_envio" ColumnName="email_envio" />
+          <ScalarProperty Name="clave_email" ColumnName="clave_email" />
+          <ScalarProperty Name="smtp_email" ColumnName="smtp_email" />
+          <ScalarProperty Name="puerto_email" ColumnName="puerto_email" />
+          <ScalarProperty Name="es_corporativo" ColumnName="es_corporativo" />
+          <ScalarProperty Name="ubigeo_distrito" ColumnName="ubigeo_distrito" />
+          <ScalarProperty Name="es_agente_percepcion" ColumnName="es_agente_percepcion" />
+          <ScalarProperty Name="es_agente_retencion" ColumnName="es_agente_retencion" />
+          <ScalarProperty Name="es_buen_contribuyente" ColumnName="es_buen_contribuyente" />
+          <ScalarProperty Name="homologado" ColumnName="homologado" />
+          <ScalarProperty Name="en_pruebas" ColumnName="en_pruebas" />
+          <ScalarProperty Name="en_produccion" ColumnName="en_produccion" />
+          <ScalarProperty Name="logo" ColumnName="logo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="forma_pago">
+      <EntityTypeMapping TypeName="facelModel.forma_pago">
+        <MappingFragment StoreEntitySet="forma_pago">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="dias" ColumnName="dias" />
+          <ScalarProperty Name="es_default" ColumnName="es_default" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="igv_vigente">
+      <EntityTypeMapping TypeName="facelModel.igv_vigente">
+        <MappingFragment StoreEntitySet="igv_vigente">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+          <ScalarProperty Name="fecha_registro" ColumnName="fecha_registro" />
+          <ScalarProperty Name="es_default" ColumnName="es_default" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="moneda">
+      <EntityTypeMapping TypeName="facelModel.moneda">
+        <MappingFragment StoreEntitySet="moneda">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="codigo_tributario" ColumnName="codigo_tributario" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="abreviado" ColumnName="abreviado" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sucursal">
+      <EntityTypeMapping TypeName="facelModel.sucursal">
+        <MappingFragment StoreEntitySet="sucursal">
+          <ScalarProperty Name="id_empresa" ColumnName="id_empresa" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="direccion" ColumnName="direccion" />
+          <ScalarProperty Name="ubigeo" ColumnName="ubigeo" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tipo_cambio">
+      <EntityTypeMapping TypeName="facelModel.tipo_cambio">
+        <MappingFragment StoreEntitySet="tipo_cambio">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_moneda_origen" ColumnName="id_moneda_origen" />
+          <ScalarProperty Name="id_moneda_destino" ColumnName="id_moneda_destino" />
+          <ScalarProperty Name="fecha" ColumnName="fecha" />
+          <ScalarProperty Name="compra" ColumnName="compra" />
+          <ScalarProperty Name="venta" ColumnName="venta" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="unidad_medida">
+      <EntityTypeMapping TypeName="facelModel.unidad_medida">
+        <MappingFragment StoreEntitySet="unidad_medida">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="abreviado" ColumnName="abreviado" />
+          <ScalarProperty Name="codigo_tributario" ColumnName="codigo_tributario" />
+          <ScalarProperty Name="activo" ColumnName="activo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
