@@ -1,0 +1,7 @@
+E:\develop\projects\00.Library\source\02.01.Library.Framework\bin\Release\00.02.01.Library.Framework.dll
+E:\develop\projects\00.Library\source\02.01.Library.Framework\bin\Release\00.02.01.Library.Framework.pdb
+E:\develop\projects\00.Library\source\02.01.Library.Framework\bin\Release\00.01.01.Library.Common.dll
+E:\develop\projects\00.Library\source\02.01.Library.Framework\bin\Release\00.01.01.Library.Common.pdb
+E:\develop\projects\00.Library\source\02.01.Library.Framework\obj\Release\ResolveAssemblyReference.cache
+E:\develop\projects\00.Library\source\02.01.Library.Framework\obj\Release\00.02.01.Library.Framework.dll
+E:\develop\projects\00.Library\source\02.01.Library.Framework\obj\Release\00.02.01.Library.Framework.pdb

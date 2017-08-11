@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F97D54B8-B321-4D14-8EE8-A62F2C4D5B90}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Library.Framework</RootNamespace>
+    <AssemblyName>00.02.01.Library.Framework</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Filter.cs" />
+    <Compile Include="Data\Sql.cs" />
+    <Compile Include="Interface\IButtonsQuery.cs" />
+    <Compile Include="Interface\IViewQuery.cs" />
+    <Compile Include="Interface\IReport.cs" />
+    <Compile Include="Interface\IViewRowDetail.cs" />
+    <Compile Include="Interface\IColumnEnable.cs" />
+    <Compile Include="Interface\IControlEnable.cs" />
+    <Compile Include="Interface\IViewList.cs" />
+    <Compile Include="Layers\AccessEF.cs" />
+    <Compile Include="Layers\AccessEnumerate.cs" />
+    <Compile Include="Layers\Access.cs" />
+    <Compile Include="Layers\EntityEF.cs" />
+    <Compile Include="Layers\Logic.cs" />
+    <Compile Include="Layers\LogicEF.cs" />
+    <Compile Include="Layers\LogicEnumerate.cs" />
+    <Compile Include="Layers\Enumerate.cs" />
+    <Compile Include="Layers\LogicEntity.cs" />
+    <Compile Include="Layers\Query.cs" />
+    <Compile Include="Layers\AccessEntity.cs" />
+    <Compile Include="Layers\Entity.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Interface\IButtonsRow.cs" />
+    <Compile Include="Interface\IButtonsTable.cs" />
+    <Compile Include="Interface\IResultMessage.cs" />
+    <Compile Include="Interface\IViewEntity.cs" />
+    <Compile Include="Interface\IViewRow.cs" />
+    <Compile Include="Interface\IViewTable.cs" />
+    <Compile Include="MVP\PresenterQuery.cs" />
+    <Compile Include="MVP\PresenterList.cs" />
+    <Compile Include="MVP\PresenterRow.cs" />
+    <Compile Include="MVP\PresenterTable.cs" />
+    <Compile Include="Print\Formatted.cs" />
+    <Compile Include="Print\Commands.cs" />
+    <Compile Include="Print\Printer.cs" />
+    <Compile Include="Print\Raw.cs" />
+    <Compile Include="Print\Report.cs" />
+    <Compile Include="Print\Template.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\01.01.Library.Common\00.01.01.Library.Common.csproj">
+      <Project>{b9ec8e35-9954-4b43-8b40-25312854cf1c}</Project>
+      <Name>00.01.01.Library.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
