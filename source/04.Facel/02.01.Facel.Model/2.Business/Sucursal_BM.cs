@@ -92,6 +92,9 @@ namespace Facel.Business.Logics
             {
                 if (paramMessage == LibraryFramework.V0005_FieldEmpty)
                 {
+    	
+    				if (paramField == "IdEmpresa")
+    					paramMessage = string.Format(LibraryFramework.V0005_FieldEmpty, "el Empresa");
                 }
             }
     
@@ -105,7 +108,7 @@ namespace Facel.Business.Logics
             {
                 if (paramMessage == LibraryFramework.V0006_TableDependencies)
                 {
-    				string sCurrentTable = "El ";
+    				string sCurrentTable = "El Sucursal";
     				
      			}
             }

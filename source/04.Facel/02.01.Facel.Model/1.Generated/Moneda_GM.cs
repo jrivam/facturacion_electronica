@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Library.Common.Data;
 using Library.Framework;
 using Library.Framework.Layers;
@@ -38,6 +39,7 @@ namespace Facel.Data.Entities
     [Serializable]
     public partial class Moneda_DE : EntityId
     {
+    	//Fields
         protected internal string _CodigoTributario;
         public virtual string CodigoTributario
     	{
@@ -63,32 +65,107 @@ namespace Facel.Data.Entities
     	    set { if (value != _Activo) { _Activo = value; OnPropertyChanged("Activo"); } }
         }	
     
+    	//ForeignKeys
     
+    	//Parents
     
-        public virtual ObservableCollection<Tipo_Cambio_BE> TipoCambioOrigenesGet(int paramMaxDepth = 1)
-    	{
-    		if (this.Id != null)
-                return new ObservableCollection<Tipo_Cambio_BE>(new Tipo_Cambio_FL().LoadConvert(new Tipo_Cambio_FE() { IdMonedaOrigen = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth));	
+    	//Childs
+        void OnCollectionChanged_TipoCambioOrigenes(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (TipoCambio_BE item in e.NewItems)
+    			{
+    				item.IdMonedaOrigen = this.Id;			
+    			}
+            }
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (TipoCambio_BE item in e.OldItems)
+    			{
+    				item.IdMonedaOrigen = null;			
+    			}
+            }
+        }
+        protected internal virtual ObservableCollection<TipoCambio_BE> _TipoCambioOrigenes { get; set; }
+        public virtual ObservableCollection<TipoCambio_BE> TipoCambioOrigenes 
+    	{ 
+    		get
+    		{
+                if (_TipoCambioOrigenes == null)
+                    TipoCambioOrigenes = TipoCambioOrigenes_New(new List<TipoCambio_BE>());
     
-            return new ObservableCollection<Tipo_Cambio_BE>();
+                return _TipoCambioOrigenes;		
+    		}
+    		set
+    		{
+    			_TipoCambioOrigenes = value;	
+    			
+    			OnPropertyChanged("TipoCambioOrigenes");
+    			
+    			_TipoCambioOrigenes.CollectionChanged += this.OnCollectionChanged_TipoCambioOrigenes;
+    		}
     	}
-        public virtual ObservableCollection<Tipo_Cambio_BE> TipoCambioOrigenesLoad(int paramMaxDepth = 1)
+    	public virtual ObservableCollection<TipoCambio_BE> TipoCambioOrigenes_New(List<TipoCambio_BE> paramList)
+        {
+            return new ObservableCollection<TipoCambio_BE>(paramList);
+        }	
+        public virtual ObservableCollection<TipoCambio_BE> TipoCambioOrigenes_Load(int paramMaxDepth = 1)
     	{
-    		return TipoCambioOrigenes = TipoCambioOrigenesGet(paramMaxDepth);
+    		return TipoCambioOrigenes = TipoCambioOrigenes_Get(paramMaxDepth);
     	}	
-        public virtual ObservableCollection<Tipo_Cambio_BE> TipoCambioOrigenes { get; set; }
-        public virtual ObservableCollection<Tipo_Cambio_BE> TipoCambioDestinosGet(int paramMaxDepth = 1)
+    	public virtual ObservableCollection<TipoCambio_BE> TipoCambioOrigenes_Get(int paramMaxDepth = 1)
     	{
-    		if (this.Id != null)
-                return new ObservableCollection<Tipo_Cambio_BE>(new Tipo_Cambio_FL().LoadConvert(new Tipo_Cambio_FE() { IdMonedaDestino = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth));	
-    
-            return new ObservableCollection<Tipo_Cambio_BE>();
+    		return TipoCambioOrigenes_New(this.Exists ? new TipoCambio_FL().LoadConvert(new TipoCambio_FE() { IdMonedaOrigen = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth) : new List<TipoCambio_BE>());	
     	}
-        public virtual ObservableCollection<Tipo_Cambio_BE> TipoCambioDestinosLoad(int paramMaxDepth = 1)
+        void OnCollectionChanged_TipoCambioDestinos(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (TipoCambio_BE item in e.NewItems)
+    			{
+    				item.IdMonedaDestino = this.Id;			
+    			}
+            }
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (TipoCambio_BE item in e.OldItems)
+    			{
+    				item.IdMonedaDestino = null;			
+    			}
+            }
+        }
+        protected internal virtual ObservableCollection<TipoCambio_BE> _TipoCambioDestinos { get; set; }
+        public virtual ObservableCollection<TipoCambio_BE> TipoCambioDestinos 
+    	{ 
+    		get
+    		{
+                if (_TipoCambioDestinos == null)
+                    TipoCambioDestinos = TipoCambioDestinos_New(new List<TipoCambio_BE>());
+    
+                return _TipoCambioDestinos;		
+    		}
+    		set
+    		{
+    			_TipoCambioDestinos = value;	
+    			
+    			OnPropertyChanged("TipoCambioDestinos");
+    			
+    			_TipoCambioDestinos.CollectionChanged += this.OnCollectionChanged_TipoCambioDestinos;
+    		}
+    	}
+    	public virtual ObservableCollection<TipoCambio_BE> TipoCambioDestinos_New(List<TipoCambio_BE> paramList)
+        {
+            return new ObservableCollection<TipoCambio_BE>(paramList);
+        }	
+        public virtual ObservableCollection<TipoCambio_BE> TipoCambioDestinos_Load(int paramMaxDepth = 1)
     	{
-    		return TipoCambioDestinos = TipoCambioDestinosGet(paramMaxDepth);
+    		return TipoCambioDestinos = TipoCambioDestinos_Get(paramMaxDepth);
     	}	
-        public virtual ObservableCollection<Tipo_Cambio_BE> TipoCambioDestinos { get; set; }
+    	public virtual ObservableCollection<TipoCambio_BE> TipoCambioDestinos_Get(int paramMaxDepth = 1)
+    	{
+    		return TipoCambioDestinos_New(this.Exists ? new TipoCambio_FL().LoadConvert(new TipoCambio_FE() { IdMonedaDestino = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth) : new List<TipoCambio_BE>());	
+    	}
     }
 }
 
@@ -222,14 +299,14 @@ namespace Facel.Data.Logics
     
             if (paramValidateCascadeIntegrity)
             {
-                if (new Tipo_Cambio_BL().Count(new Tipo_Cambio_BE() { IdMonedaOrigen = be.Id }) > 0)
+                if (new TipoCambio_BL().Count(new TipoCambio_BE() { IdMonedaOrigen = be.Id }) > 0)
                 {
                     paramField = "TipoCambio";
     				paramMessage = LibraryFramework.V0006_TableDependencies;
     
                     return false;
                 }
-                if (new Tipo_Cambio_BL().Count(new Tipo_Cambio_BE() { IdMonedaDestino = be.Id }) > 0)
+                if (new TipoCambio_BL().Count(new TipoCambio_BE() { IdMonedaDestino = be.Id }) > 0)
                 {
                     paramField = "TipoCambio";
     				paramMessage = LibraryFramework.V0006_TableDependencies;
@@ -250,15 +327,56 @@ namespace Facel.Data.Logics
     		foreach (Moneda_BE e in new Moneda_FL().LoadConvert(new Moneda_FL().Convert(be), 1))
     		{
     			if (ret == 1)
-    	            ret = new Tipo_Cambio_BL().Erase(new Tipo_Cambio_BE() { IdMonedaOrigen = e.Id }, false, paramIsSourceColumn); 
+    	            ret = new TipoCambio_BL().Erase(new TipoCambio_BE() { IdMonedaOrigen = e.Id }, false, paramIsSourceColumn); 
     			if (ret == 1)
-    	            ret = new Tipo_Cambio_BL().Erase(new Tipo_Cambio_BE() { IdMonedaDestino = e.Id }, false, paramIsSourceColumn); 
+    	            ret = new TipoCambio_BL().Erase(new TipoCambio_BE() { IdMonedaDestino = e.Id }, false, paramIsSourceColumn); 
      		}
     		
     		if (ret == 1)
                 ret = base.EraseModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
             
     		return ret;
+        }	
+    	
+    	protected override byte SaveParent(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Moneda_BE be = (Moneda_BE)paramDE;
+    
+            byte ret = 1;
+    
+    				
+            if (ret == 1)
+            {		
+    		}
+    
+            return ret;
+        }
+        protected override byte SaveDetails(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Moneda_BE be = (Moneda_BE)paramDE;
+    
+            byte ret = 1;
+    
+            if (ret == 1)
+            {		
+    			foreach (TipoCambio_BE beTipoCambioOrigen in be.TipoCambioOrigenes)
+    					beTipoCambioOrigen.IdMonedaOrigen = be.Id;		
+    			foreach (TipoCambio_BE beTipoCambioDestino in be.TipoCambioDestinos)
+    					beTipoCambioDestino.IdMonedaDestino = be.Id;        
+    		} 
+    		
+            if (ret == 1)
+            {		
+    			foreach (TipoCambio_BE beTipoCambioOrigen in be.TipoCambioOrigenes)
+                    if (ret == 1)
+                        ret = new TipoCambio_BL().Save(beTipoCambioOrigen, paramStatus, paramCheckKeyEmpty, paramIsSourceColumn);
+    		
+    			foreach (TipoCambio_BE beTipoCambioDestino in be.TipoCambioDestinos)
+                    if (ret == 1)
+                        ret = new TipoCambio_BL().Save(beTipoCambioDestino, paramStatus, paramCheckKeyEmpty, paramIsSourceColumn);
+    		}		
+            
+            return ret;
         }	
     }
 }
@@ -271,7 +389,7 @@ namespace Facel.Business.Logics
         protected override Access GetDA()
         {
             return new Moneda_BA(TableName, ConnectionStringName);
-        }	
+        }		
     }
     
 }
@@ -388,13 +506,13 @@ namespace Facel.Join.Logics
             return new Moneda_JA(TableName, ConnectionStringName);
         }
     	
-    	public ObservableCollection<Moneda_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
+    	public List<Moneda_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
                 int paramTop = 0,
     			int paramRowFrom = 0, int paramRowTo = 0)
         {
-        	return new ObservableCollection<Moneda_BE>(Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
+        	return Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
                     paramTop,
-    				paramRowFrom, paramRowTo).ConvertAll(x => x as Moneda_BE));
+    				paramRowFrom, paramRowTo).ConvertAll(x => x as Moneda_BE);
         }
     	public Moneda_FE Convert(Moneda_BE paramDE)
         {

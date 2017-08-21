@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Library.Common.Data;
 using Library.Framework;
 using Library.Framework.Layers;
@@ -38,6 +39,7 @@ namespace Facel.Data.Entities
     [Serializable]
     public partial class Detracciones_DE : EntityId
     {
+    	//Fields
         protected internal string _Codigo;
         public virtual string Codigo
     	{
@@ -69,8 +71,11 @@ namespace Facel.Data.Entities
     	    set { if (value != _Activo) { _Activo = value; OnPropertyChanged("Activo"); } }
         }	
     
+    	//ForeignKeys
     
+    	//Parents
     
+    	//Childs
     }
 }
 
@@ -243,6 +248,35 @@ namespace Facel.Data.Logics
             
     		return ret;
         }	
+    	
+    	protected override byte SaveParent(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Detracciones_BE be = (Detracciones_BE)paramDE;
+    
+            byte ret = 1;
+    
+    				
+            if (ret == 1)
+            {		
+    		}
+    
+            return ret;
+        }
+        protected override byte SaveDetails(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Detracciones_BE be = (Detracciones_BE)paramDE;
+    
+            byte ret = 1;
+    
+            if (ret == 1)
+            {        
+    		} 
+    		
+            if (ret == 1)
+            {		}		
+            
+            return ret;
+        }	
     }
 }
 
@@ -254,7 +288,7 @@ namespace Facel.Business.Logics
         protected override Access GetDA()
         {
             return new Detracciones_BA(TableName, ConnectionStringName);
-        }	
+        }		
     }
     
 }
@@ -373,13 +407,13 @@ namespace Facel.Join.Logics
             return new Detracciones_JA(TableName, ConnectionStringName);
         }
     	
-    	public ObservableCollection<Detracciones_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
+    	public List<Detracciones_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
                 int paramTop = 0,
     			int paramRowFrom = 0, int paramRowTo = 0)
         {
-        	return new ObservableCollection<Detracciones_BE>(Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
+        	return Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
                     paramTop,
-    				paramRowFrom, paramRowTo).ConvertAll(x => x as Detracciones_BE));
+    				paramRowFrom, paramRowTo).ConvertAll(x => x as Detracciones_BE);
         }
     	public Detracciones_FE Convert(Detracciones_BE paramDE)
         {

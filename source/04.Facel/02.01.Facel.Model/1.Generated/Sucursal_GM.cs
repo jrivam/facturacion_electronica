@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Library.Common.Data;
 using Library.Framework;
 using Library.Framework.Layers;
@@ -38,12 +39,7 @@ namespace Facel.Data.Entities
     [Serializable]
     public partial class Sucursal_DE : EntityId
     {
-        protected internal Nullable<int> _IdEmpresa;
-        public virtual Nullable<int> IdEmpresa
-    	{
-    	    get { return _IdEmpresa; }
-    	    set { if (value != _IdEmpresa) { _IdEmpresa = value; OnPropertyChanged("IdEmpresa"); } }
-        }	
+    	//Fields
         protected internal string _Nombre;
         public virtual string Nombre
     	{
@@ -68,37 +64,76 @@ namespace Facel.Data.Entities
     	    get { return _Activo; }
     	    set { if (value != _Activo) { _Activo = value; OnPropertyChanged("Activo"); } }
         }	
+        protected internal string _Telefono;
+        public virtual string Telefono
+    	{
+    	    get { return _Telefono; }
+    	    set { if (value != _Telefono) { _Telefono = value; OnPropertyChanged("Telefono"); } }
+        }	
+        protected internal Nullable<bool> _EsPrincipal;
+        public virtual Nullable<bool> EsPrincipal
+    	{
+    	    get { return _EsPrincipal; }
+    	    set { if (value != _EsPrincipal) { _EsPrincipal = value; OnPropertyChanged("EsPrincipal"); } }
+        }	
     
+    	//ForeignKeys
+    	protected internal Nullable<int> _IdEmpresa;
+    	public virtual Nullable<int> IdEmpresa
+    	{
+    		get
+    		{
+    			return _IdEmpresa;
+    		}
+    		set
+    		{
+                if (value != _IdEmpresa) 
+    			{
+    				_IdEmpresa = value;
+    				
+    				if (_IdEmpresa == null) Empresa = null;			
+    												
+    				OnPropertyChanged("IdEmpresa");
+    			}		
+    		}
+    	}	
     
+    	//Parents
     	protected internal Empresa_BE _Empresa;
         public virtual Empresa_BE Empresa
     	{
             get 
             {
-    			if (_Empresa == null) _Empresa = new Empresa_BE();
+    			if (IdEmpresa != null)
+    			{
+    				if (_Empresa == null) _Empresa = new Empresa_BE();
     			
-    			if (!_Empresa.Loaded && Id != null)
-    			{	
-    				_Empresa.Id = Id;
-     
-                    new Empresa_BL().Load(_Empresa);
-    			}
-    				
-                return _Empresa;
+    				if (!_Empresa.Loaded)
+    				{
+    					_Empresa.Id = IdEmpresa;				
+    					new Empresa_BL().Load(_Empresa);
+    				}
+    			}	
+    			
+    			return _Empresa;
             } 
     		set
     		{
                 if (value != _Empresa) 
     			{
-    				_Empresa = value;
+    				if (_Empresa != null)
+    					_Empresa.Sucursales.Remove((Sucursal_BE)this);
+    				if (value != null)
+    					value.Sucursales.Add((Sucursal_BE)this);
+    
+    				_Empresa = value;	
     				
-    				Id = _Empresa.Id;
-                
     				OnPropertyChanged("Empresa");
     			}
     		}
     	}
     
+    	//Childs
     }
 }
 
@@ -133,11 +168,13 @@ namespace Facel.Data.Accesses
     
             List<Field> fields = new List<Field>();
     
-            fields = AddField<Nullable<int>>(fields, "id_empresa", System.Data.DbType.Int32, be.IdEmpresa, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "nombre", System.Data.DbType.String, be.Nombre, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "direccion", System.Data.DbType.String, be.Direccion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "ubigeo", System.Data.DbType.String, be.Ubigeo, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "activo", System.Data.DbType.Boolean, be.Activo, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<string>(fields, "telefono", System.Data.DbType.String, be.Telefono, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<Nullable<bool>>(fields, "es_principal", System.Data.DbType.Boolean, be.EsPrincipal, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<Nullable<int>>(fields, "id_empresa", System.Data.DbType.Int32, be.IdEmpresa, paramIsSourceColumn, paramTableAlias);
             
     		return fields;
         }
@@ -146,11 +183,13 @@ namespace Facel.Data.Accesses
     	{
             Sucursal_DE be = (Sucursal_DE)paramDE;
     
-    		be._IdEmpresa = Conversion.To<Nullable<int>>(paramReader[TableColumn("id_empresa")]);
     		be._Nombre = Conversion.To<string>(paramReader[TableColumn("nombre")]);
     		be._Direccion = Conversion.To<string>(paramReader[TableColumn("direccion")]);
     		be._Ubigeo = Conversion.To<string>(paramReader[TableColumn("ubigeo")]);
     		be._Activo = Conversion.To<Nullable<bool>>(paramReader[TableColumn("activo")]);
+    		be._Telefono = Conversion.To<string>(paramReader[TableColumn("telefono")]);
+    		be._EsPrincipal = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_principal")]);
+    		be._IdEmpresa = Conversion.To<Nullable<int>>(paramReader[TableColumn("id_empresa")]);
       
             return be;
     	}
@@ -158,11 +197,13 @@ namespace Facel.Data.Accesses
     	{
             Sucursal_DE be = (Sucursal_DE)paramDE;
     
-    		be._IdEmpresa = Conversion.To<Nullable<int>>(paramRow[TableColumn("id_empresa")]);
     		be._Nombre = Conversion.To<string>(paramRow[TableColumn("nombre")]);
     		be._Direccion = Conversion.To<string>(paramRow[TableColumn("direccion")]);
     		be._Ubigeo = Conversion.To<string>(paramRow[TableColumn("ubigeo")]);
     		be._Activo = Conversion.To<Nullable<bool>>(paramRow[TableColumn("activo")]);
+    		be._Telefono = Conversion.To<string>(paramRow[TableColumn("telefono")]);
+    		be._EsPrincipal = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_principal")]);
+    		be._IdEmpresa = Conversion.To<Nullable<int>>(paramRow[TableColumn("id_empresa")]);
       
             return be;
     	}
@@ -170,11 +211,13 @@ namespace Facel.Data.Accesses
     	{
             Sucursal_DE be = (Sucursal_DE)paramDE;
     
-    		be._IdEmpresa = Conversion.To<Nullable<int>>(paramParameters[TableParameter("id_empresa")].Value);
     		be._Nombre = Conversion.To<string>(paramParameters[TableParameter("nombre")].Value);
     		be._Direccion = Conversion.To<string>(paramParameters[TableParameter("direccion")].Value);
     		be._Ubigeo = Conversion.To<string>(paramParameters[TableParameter("ubigeo")].Value);
     		be._Activo = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("activo")].Value);
+    		be._Telefono = Conversion.To<string>(paramParameters[TableParameter("telefono")].Value);
+    		be._EsPrincipal = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_principal")].Value);
+    		be._IdEmpresa = Conversion.To<Nullable<int>>(paramParameters[TableParameter("id_empresa")].Value);
       
             return be;
     	}
@@ -183,11 +226,13 @@ namespace Facel.Data.Accesses
         {
             Sucursal_DE be = (Sucursal_DE)paramDE;
     
-    		be._IdEmpresa = null;
     		be._Nombre = null;
     		be._Direccion = null;
     		be._Ubigeo = null;
     		be._Activo = null;
+    		be._Telefono = null;
+    		be._EsPrincipal = null;
+    		be._IdEmpresa = null;
       
     		be._Empresa = null;
     
@@ -258,6 +303,38 @@ namespace Facel.Data.Logics
             
     		return ret;
         }	
+    	
+    	protected override byte SaveParent(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Sucursal_BE be = (Sucursal_BE)paramDE;
+    
+            byte ret = 1;
+    
+    		if (ret == 1)
+                ret = new Empresa_BL().Save(be.Empresa, paramStatus, paramCheckKeyEmpty, paramIsSourceColumn);
+    				
+            if (ret == 1)
+            {		
+    			if (be.Empresa != null) be.IdEmpresa = be.Empresa.Id;		
+    		}
+    
+            return ret;
+        }
+        protected override byte SaveDetails(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Sucursal_BE be = (Sucursal_BE)paramDE;
+    
+            byte ret = 1;
+    
+            if (ret == 1)
+            {        
+    		} 
+    		
+            if (ret == 1)
+            {		}		
+            
+            return ret;
+        }	
     }
 }
 
@@ -269,7 +346,7 @@ namespace Facel.Business.Logics
         protected override Access GetDA()
         {
             return new Sucursal_BA(TableName, ConnectionStringName);
-        }	
+        }		
     }
     
 }
@@ -280,11 +357,13 @@ namespace Facel.Join.Entities
     [Serializable]
     public partial class Sucursal_JE : EnumerateId
     {
-        public virtual Filter<Nullable<int>> IdEmpresa { get; set; }
         public virtual Filter<string> Nombre { get; set; }
         public virtual Filter<string> Direccion { get; set; }
         public virtual Filter<string> Ubigeo { get; set; }
         public virtual Filter<Nullable<bool>> Activo { get; set; }
+        public virtual Filter<string> Telefono { get; set; }
+        public virtual Filter<Nullable<bool>> EsPrincipal { get; set; }
+        public virtual Filter<Nullable<int>> IdEmpresa { get; set; }
     
     	protected Empresa_FE _Empresa;
         public Empresa_FE Empresa
@@ -338,11 +417,13 @@ namespace Facel.Join.Accesses
     
             List<Field> fields = new List<Field>();
     
-            fields = AddField<Nullable<int>>(fields, "id_empresa", System.Data.DbType.Int32, be.IdEmpresa, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "nombre", System.Data.DbType.String, be.Nombre, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "direccion", System.Data.DbType.String, be.Direccion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "ubigeo", System.Data.DbType.String, be.Ubigeo, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "activo", System.Data.DbType.Boolean, be.Activo, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<string>(fields, "telefono", System.Data.DbType.String, be.Telefono, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<Nullable<bool>>(fields, "es_principal", System.Data.DbType.Boolean, be.EsPrincipal, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<Nullable<int>>(fields, "id_empresa", System.Data.DbType.Int32, be.IdEmpresa, paramIsSourceColumn, paramTableAlias);
             
     		return fields;
         }
@@ -363,7 +444,7 @@ namespace Facel.Join.Accesses
         {
     		Sucursal_FE be = (Sucursal_FE)paramDE;	
     	
-    		paramTables += new Empresa_FL().GetTablesJoin(be.Empresa, paramDepth, paramMaxDepth, paramIsSourceColumn, paramTableAlias, paramTableAlias + "__empresa", new Dictionary<string, string>() { { "id", "id" } });
+    		paramTables += new Empresa_FL().GetTablesJoin(be.Empresa, paramDepth, paramMaxDepth, paramIsSourceColumn, paramTableAlias, paramTableAlias + "__empresa", new Dictionary<string, string>() { { "id_empresa", "id" } });
     
     		return paramTables;
     	}	
@@ -404,23 +485,25 @@ namespace Facel.Join.Logics
             return new Sucursal_JA(TableName, ConnectionStringName);
         }
     	
-    	public ObservableCollection<Sucursal_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
+    	public List<Sucursal_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
                 int paramTop = 0,
     			int paramRowFrom = 0, int paramRowTo = 0)
         {
-        	return new ObservableCollection<Sucursal_BE>(Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
+        	return Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
                     paramTop,
-    				paramRowFrom, paramRowTo).ConvertAll(x => x as Sucursal_BE));
+    				paramRowFrom, paramRowTo).ConvertAll(x => x as Sucursal_BE);
         }
     	public Sucursal_FE Convert(Sucursal_BE paramDE)
         {
             Sucursal_FE be = new Sucursal_FE();
     
-    		be.IdEmpresa = new Filter<Nullable<int>>(paramDE.IdEmpresa);
     		be.Nombre = new Filter<string>(paramDE.Nombre);
     		be.Direccion = new Filter<string>(paramDE.Direccion);
     		be.Ubigeo = new Filter<string>(paramDE.Ubigeo);
     		be.Activo = new Filter<Nullable<bool>>(paramDE.Activo);
+    		be.Telefono = new Filter<string>(paramDE.Telefono);
+    		be.EsPrincipal = new Filter<Nullable<bool>>(paramDE.EsPrincipal);
+    		be.IdEmpresa = new Filter<Nullable<int>>(paramDE.IdEmpresa);
     		be.Id = new Filter<Nullable<int>>(paramDE.Id);
       
             return be;

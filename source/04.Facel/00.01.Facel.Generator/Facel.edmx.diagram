@@ -4,27 +4,27 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="712cc3a9e2784eb68b13547990618e80" Name="Diagram1" ZoomLevel="67">
+      <Diagram DiagramId="712cc3a9e2784eb68b13547990618e80" Name="Diagram1" ZoomLevel="76">
         <EntityTypeShape EntityType="facelModel.agentes_percepcion" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.agentes_retencion" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.buenos_contribuyentes" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.concepto_venta" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.detracciones" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.documento_identidad" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="facelModel.documento_serie" Width="1.5" PointX="8" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="facelModel.documentos_venta" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="facelModel.empresa" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.forma_pago" Width="1.5" PointX="9.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.igv_vigente" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.moneda" Width="1.5" PointX="5.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="facelModel.sucursal" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.tipo_cambio" Width="1.5" PointX="8" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="facelModel.unidad_medida" Width="1.5" PointX="11.5" PointY="3.75" IsExpanded="true" />
-        <AssociationConnector Association="facelModel.R_30" ManuallyRouted="false" />
-        <AssociationConnector Association="facelModel.R_32" ManuallyRouted="false" />
-        <AssociationConnector Association="facelModel.R_34" ManuallyRouted="false" />
         <AssociationConnector Association="facelModel.R_29" ManuallyRouted="false" />
         <AssociationConnector Association="facelModel.R_33" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="facelModel.documento_serie" Width="1.5" PointX="3" PointY="13.75" />
+        <EntityTypeShape EntityType="facelModel.documentos_venta" Width="1.5" PointX="0.75" PointY="13" />
+        <EntityTypeShape EntityType="facelModel.empresa" Width="1.5" PointX="7.75" PointY="12.125" />
+        <EntityTypeShape EntityType="facelModel.sucursal" Width="1.5" PointX="10" PointY="14.125" />
+        <AssociationConnector Association="facelModel.R_41" />
+        <AssociationConnector Association="facelModel.R_34" />
+        <AssociationConnector Association="facelModel.R_40" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

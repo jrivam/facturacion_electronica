@@ -35,6 +35,13 @@
                                 </div>
                                 <div class="x_content">
                                 <br />
+                                     <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
+						                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Empresa:</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <asp:DropDownList ID="cboEmpresa" runat="server" class="select2_single form-control" DataValueField="empresa_id" DataTextField="empresa_razon_social"></asp:DropDownList>
+                                            </div>
+					                    </div>
+
                                     <div class="form-horizontal form-label-left input_mask">
                                         <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                             <asp:TextBox ID="txtNombreSucursal" class="form-control has-feedback-right" runat="server" placeholder="Sede Tumbes..."></asp:TextBox>
@@ -42,6 +49,10 @@
                                         </div>
                                         <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                             <asp:TextBox ID="txtDireccionSucursal" class="form-control has-feedback-right" runat="server" placeholder="Calle. los nogales..."></asp:TextBox>
+                                        <span class="fa fa-map-marker form-control-feedback right" aria-hidden="true"></span>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                            <asp:TextBox ID="txtTelefono" class="form-control has-feedback-right" runat="server" placeholder=""></asp:TextBox>
                                         <span class="fa fa-map-marker form-control-feedback right" aria-hidden="true"></span>
                                         </div>
                                         <div class="col-md-4 col-sm-4 col-xs-12 form-group has-feedback">
@@ -62,7 +73,12 @@
                                                 <asp:DropDownList ID="cboDistrito" runat="server" class="select2_single form-control"></asp:DropDownList>
                                             </div>
 					                    </div>
-					  
+					  					 <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <label>
+                                                Principal: <input id="chkEsPrincipal" runat="server" type="checkbox" class="js-switch" checked/>
+                                            </label>                                            
+						                </div>
+
 					                    <div class="form-group">
 						                    <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <label>
@@ -76,8 +92,8 @@
                                         <div class="form-group">
                                                 <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
                                                     <asp:Button ID="btnCancelar" runat="server" class="btn btn-danger" Text="CANCELAR" />
-                                                    <asp:Button ID="btnActualizar" runat="server" class="btn btn-warning" Text="ACTUALIZAR" />
-                                                    <asp:Button ID="btnGrabar" runat="server" class="btn btn-success" Text="GRABAR" />
+                                                    <asp:Button ID="btnActualizar" runat="server" class="btn btn-warning" Text="ACTUALIZAR" OnClick="btnActualizar_Click"/>
+                                                    <asp:Button ID="btnGrabar" runat="server" class="btn btn-success" Text="GRABAR" OnClick="btnGrabar_Click" />
                                                 </div>
                                         </div>
                                 </div>

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Library.Common.Data;
 using Library.Framework.Data;
+using Library.Framework.Aspects;
 
 namespace Library.Framework.Layers
 {
@@ -37,21 +39,21 @@ namespace Library.Framework.Layers
 
         public virtual bool Save(Entity paramDE, bool paramIsKeyEmpty, bool paramIsSourceColumn = false)
         {
-            if (paramDE.Exists)
+            if (paramDE.Loaded)
             {
                 if (paramDE.MarkDelete)
-                    return Erase(paramDE, paramIsKeyEmpty, paramIsSourceColumn);
-                else if (paramDE.Changed)
+                    return (Erase(paramDE, paramIsKeyEmpty, paramIsSourceColumn));
+                else
                     return (Update(paramDE, paramIsKeyEmpty, paramIsSourceColumn) >= 0);
             }
             else
             {
-                if (paramDE.Changed)
-                    return (Insert(paramDE, paramIsKeyEmpty, paramIsSourceColumn) > 0);
+                return (Insert(paramDE, paramIsKeyEmpty, paramIsSourceColumn) > 0);
             }
 
             return true;
         }
+        //[UndoAspect]
         protected virtual int Insert(Entity paramDE, bool paramIsKeyEmpty, bool paramIsSourceColumn = false)
         {
             int ret = 0;
@@ -65,12 +67,12 @@ namespace Library.Framework.Layers
             {
                 LoadKeyParameters(command.Parameters, paramDE);
                 paramDE.Loaded = true;
-                //paramDE.Changed = false;
                 paramDE.Saved = true;
             }
 
             return ret;
         }
+        //[UndoAspect]
         protected virtual int Update(Entity paramDE, bool paramIsKeyEmpty, bool paramIsSourceColumn = false)
         {
             int ret = 0; 
@@ -82,7 +84,6 @@ namespace Library.Framework.Layers
 
             if (ret > 0)
             {
-                //paramDE.Changed = false;
                 paramDE.Saved = true;
             }
 
@@ -93,6 +94,7 @@ namespace Library.Framework.Layers
         {
             return (Delete(paramDE, paramIsKeyEmpty, paramIsSourceColumn) >= 0);
         }
+        //[UndoAspect]
         protected virtual int Delete(Entity paramDE, bool paramIsKeyEmpty, bool paramIsSourceColumn = false)
         {
             int ret = 0; 
@@ -159,6 +161,9 @@ namespace Library.Framework.Layers
         {
             DbCommand command = GetCommandData(Database.GetCommand(Database.GetConnectionStringSettings(ConnectionStringName).ProviderName), paramDE, paramType, paramIsSourceColumn);
 
+            GetParameters(command.Parameters, GetFieldsKey(paramDE, paramIsSourceColumn, TableName));
+            GetParameters(command.Parameters, GetFieldsData(paramDE, paramIsSourceColumn, TableName)); 
+            
             return command;
         }
         protected virtual DbCommand GetCommandData(DbCommand paramCommand, Entity paramDE, string paramType, bool paramIsSourceColumn = false)
@@ -202,15 +207,16 @@ namespace Library.Framework.Layers
             paramCommand.CommandText = commandtext;
             paramCommand.CommandType = CommandType.Text;
 
-            GetParameters(paramCommand.Parameters, GetFieldsKey(paramDE, paramIsSourceColumn, TableName));
-            GetParameters(paramCommand.Parameters, GetFieldsData(paramDE, paramIsSourceColumn, TableName));
-
             return paramCommand;
         }
 
         public DbCommand GetCommandKey(Entity paramDE, string paramType, bool paramIsSourceColumn = false)
         {
             DbCommand command = GetCommandKey(Database.GetCommand(Database.GetConnectionStringSettings(ConnectionStringName).ProviderName), paramDE, paramType, paramIsSourceColumn);
+
+            GetParameters(command.Parameters, GetFieldsKey(paramDE, paramIsSourceColumn, TableName));
+            if (paramType == "I" || paramType == "U")
+                GetParameters(command.Parameters, GetFieldsData(paramDE, paramIsSourceColumn, TableName));
 
             return command;
         }
@@ -252,10 +258,6 @@ namespace Library.Framework.Layers
 
             paramCommand.CommandText = commandtext;
             paramCommand.CommandType = CommandType.Text;
-
-            GetParameters(paramCommand.Parameters, GetFieldsKey(paramDE, paramIsSourceColumn, TableName));
-            if (paramType == "I" || paramType == "U")
-                GetParameters(paramCommand.Parameters, GetFieldsData(paramDE, paramIsSourceColumn, TableName));
 
             return paramCommand;
         }
@@ -300,7 +302,6 @@ namespace Library.Framework.Layers
             Entity ret = LoadDataReader(paramReader, LoadKeyReader(paramReader, paramDE));
 
             ret.Loaded = true;
-            ret.Changed = false;
             ret.Saved = false;
 
             return ret;
@@ -320,7 +321,6 @@ namespace Library.Framework.Layers
             Entity ret = LoadDataRow(paramRow, LoadKeyRow(paramRow, paramDE));
 
             ret.Loaded = true;
-            ret.Changed = false;
             ret.Saved = false;
 
             return ret;
@@ -393,7 +393,7 @@ namespace Library.Framework.Layers
         protected override Entity LoadKeyParameters(DbParameterCollection paramParameters, Entity paramDE)
         {
             if (paramDE is EntityId)
-                ((EntityId)paramDE).InsertId = Conversion.To<Nullable<int>>(paramParameters[TableParameter("id")].Value);
+                ((EntityId)paramDE).Id = Conversion.To<Nullable<int>>(paramParameters[TableParameter("id")].Value);
             return paramDE;
         }
     }

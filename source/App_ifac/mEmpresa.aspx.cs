@@ -1,6 +1,7 @@
 ﻿using Facel.Business.Entities;
 using Facel.Business.Logics;
 using System;
+using System.Transactions;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 
@@ -31,7 +32,10 @@ namespace App_ifac
         {
             Grabar();
         }
-
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            Buscar();
+        }
         protected void Buscar()
         {
             grvEmpresas.DataSource = new Empresa_BL().GetDataTable(new Empresa_BE());
@@ -47,7 +51,6 @@ namespace App_ifac
             txtRuc.Text = be.Ruc;
             txtRazonSocial.Text = be.RazonSocial;
             txtDireccionFiscal.Text = be.DireccionFiscal;
-            txtTelefono.Text = be.Telefono;
             txtEmail.Text = be.Email;
             txtPaginaWeb.Text = be.Website;
             txtUsuarioSunat.Text = be.UsuarioSunat;
@@ -58,6 +61,7 @@ namespace App_ifac
             txtPuertoEmail.Text = be.PuertoEmail.ToString();
 
             ((HtmlInputCheckBox)Page.Form.FindControl("mainBody").FindControl("chkActivo")).Checked = be.Activo ?? be.Activo.Value;
+
             ((HtmlInputCheckBox)Page.Form.FindControl("mainBody").FindControl("chkElectronico")).Checked = be.EsEmisorElectronico ?? be.EsEmisorElectronico.Value;
             ((HtmlInputCheckBox)Page.Form.FindControl("mainBody").FindControl("chkSSL")).Checked = be.EsSsl ?? be.EsSsl.Value;
             ((HtmlInputCheckBox)Page.Form.FindControl("mainBody").FindControl("chkCorporativo")).Checked = be.EsCorporativo ?? be.EsCorporativo.Value;
@@ -83,8 +87,6 @@ namespace App_ifac
             be.Ruc = txtRuc.Text;
             be.RazonSocial = txtRazonSocial.Text;
             be.DireccionFiscal = txtDireccionFiscal.Text;
-            be.Direccion = be.DireccionFiscal;
-            be.Telefono = txtTelefono.Text;
             be.Email = txtEmail.Text;
             be.Website = txtPaginaWeb.Text;
             be.UsuarioSunat = txtUsuarioSunat.Text;
@@ -106,7 +108,24 @@ namespace App_ifac
             be.Homologado = ((HtmlInputRadioButton)Page.Form.FindControl("mainBody").FindControl("rbtHomologacion")).Checked;
             be.EnProduccion = ((HtmlInputRadioButton)Page.Form.FindControl("mainBody").FindControl("rbtProduccion")).Checked;
 
-            new Empresa_BL().Save(be);
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    if (new Empresa_BL().Save(be, Library.Framework.Layers.SaveStatus.Complete) == 1)
+                    {
+                        Sucursal_BE beSucursal = new Sucursal_BE();
+
+                        beSucursal.IdEmpresa = be.Id;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }
