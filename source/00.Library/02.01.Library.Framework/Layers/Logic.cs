@@ -8,6 +8,14 @@ using Library.Framework.Data;
 
 namespace Library.Framework.Layers
 {
+    public enum SaveStatus
+    {
+        Complete = 0,
+        Parent = 1,
+        Detail = 2,
+        Update = 3
+    }
+    
     [Serializable]
     public abstract class Logic
     {

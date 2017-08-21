@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04.01.01.Facel.Main", "04.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04.02.01.Facel.Model", "04.Facel\02.01.Facel.Model\04.02.01.Facel.Model.csproj", "{FA57857D-6F16-417D-B8E8-A30B3040A73D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facel.WebApi", "Facel.WebApi\Facel.WebApi.csproj", "{2FD866CA-1A62-438A-8AED-04B0E3150300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facel.Mvc", "Facel.Mvc\Facel.Mvc.csproj", "{21184B7B-75DD-444B-8A03-00B3457A78FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{FA57857D-6F16-417D-B8E8-A30B3040A73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA57857D-6F16-417D-B8E8-A30B3040A73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA57857D-6F16-417D-B8E8-A30B3040A73D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FD866CA-1A62-438A-8AED-04B0E3150300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FD866CA-1A62-438A-8AED-04B0E3150300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FD866CA-1A62-438A-8AED-04B0E3150300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FD866CA-1A62-438A-8AED-04B0E3150300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21184B7B-75DD-444B-8A03-00B3457A78FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21184B7B-75DD-444B-8A03-00B3457A78FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21184B7B-75DD-444B-8A03-00B3457A78FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21184B7B-75DD-444B-8A03-00B3457A78FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

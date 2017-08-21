@@ -108,17 +108,17 @@ namespace Facel.Business.Logics
             {
                 if (paramMessage == LibraryFramework.V0006_TableDependencies)
                 {
-    				string sCurrentTable = "El ";
+    				string sCurrentTable = "El Empresa";
     				
-    				if (paramField == "")
+    				if (paramField == "Empresa")
                     {
                         paramField = string.Empty;
-                        paramMessage = string.Format(LibraryFramework.V0006_TableDependencies, sCurrentTable, "s");
+                        paramMessage = string.Format(LibraryFramework.V0006_TableDependencies, sCurrentTable, "Empresas");
                     }
-    				if (paramField == "")
+    				if (paramField == "Sucursal")
                     {
                         paramField = string.Empty;
-                        paramMessage = string.Format(LibraryFramework.V0006_TableDependencies, sCurrentTable, "s");
+                        paramMessage = string.Format(LibraryFramework.V0006_TableDependencies, sCurrentTable, "Sucursals");
                     }
      			}
             }

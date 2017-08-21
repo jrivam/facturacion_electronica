@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Library.Common.Data;
 using Library.Framework;
 using Library.Framework.Layers;
@@ -38,6 +39,7 @@ namespace Facel.Data.Entities
     [Serializable]
     public partial class Empresa_DE : EntityId
     {
+    	//Fields
         protected internal string _Ruc;
         public virtual string Ruc
     	{
@@ -50,29 +52,11 @@ namespace Facel.Data.Entities
     	    get { return _RazonSocial; }
     	    set { if (value != _RazonSocial) { _RazonSocial = value; OnPropertyChanged("RazonSocial"); } }
         }	
-        protected internal string _Direccion;
-        public virtual string Direccion
-    	{
-    	    get { return _Direccion; }
-    	    set { if (value != _Direccion) { _Direccion = value; OnPropertyChanged("Direccion"); } }
-        }	
         protected internal string _DireccionFiscal;
         public virtual string DireccionFiscal
     	{
     	    get { return _DireccionFiscal; }
     	    set { if (value != _DireccionFiscal) { _DireccionFiscal = value; OnPropertyChanged("DireccionFiscal"); } }
-        }	
-        protected internal string _Telefono;
-        public virtual string Telefono
-    	{
-    	    get { return _Telefono; }
-    	    set { if (value != _Telefono) { _Telefono = value; OnPropertyChanged("Telefono"); } }
-        }	
-        protected internal string _Email;
-        public virtual string Email
-    	{
-    	    get { return _Email; }
-    	    set { if (value != _Email) { _Email = value; OnPropertyChanged("Email"); } }
         }	
         protected internal string _Website;
         public virtual string Website
@@ -140,11 +124,11 @@ namespace Facel.Data.Entities
     	    get { return _EsCorporativo; }
     	    set { if (value != _EsCorporativo) { _EsCorporativo = value; OnPropertyChanged("EsCorporativo"); } }
         }	
-        protected internal string _UbigeoDistrito;
-        public virtual string UbigeoDistrito
+        protected internal string _UbigeoFiscal;
+        public virtual string UbigeoFiscal
     	{
-    	    get { return _UbigeoDistrito; }
-    	    set { if (value != _UbigeoDistrito) { _UbigeoDistrito = value; OnPropertyChanged("UbigeoDistrito"); } }
+    	    get { return _UbigeoFiscal; }
+    	    set { if (value != _UbigeoFiscal) { _UbigeoFiscal = value; OnPropertyChanged("UbigeoFiscal"); } }
         }	
         protected internal Nullable<bool> _EsAgentePercepcion;
         public virtual Nullable<bool> EsAgentePercepcion
@@ -190,11 +174,18 @@ namespace Facel.Data.Entities
         }	
         protected internal Nullable<bool> _EsSsl;
         public virtual Nullable<bool> EsSsl
+        {
+            get { return _EsSsl; }
+            set { if (value != _EsSsl) { _EsSsl = value; OnPropertyChanged("EsSsl"); } }
+        }	
+        protected internal string _Email;
+        public virtual string Email
     	{
-    	    get { return _EsSsl; }
-    	    set { if (value != _EsSsl) { _EsSsl = value; OnPropertyChanged("EsSsl"); } }
+    	    get { return _Email; }
+    	    set { if (value != _Email) { _Email = value; OnPropertyChanged("Email"); } }
         }	
     
+    	//ForeignKeys
     	protected internal Nullable<int> _IdEmpresaPadre;
     	public virtual Nullable<int> IdEmpresaPadre
     	{
@@ -206,68 +197,147 @@ namespace Facel.Data.Entities
     		{
                 if (value != _IdEmpresaPadre) 
     			{
-    				_IdEmpresaPadre = value;	
+    				_IdEmpresaPadre = value;
     				
-    				Empresa.Id = _IdEmpresaPadre;						
-    	            
+    				if (_IdEmpresaPadre == null) Empresa = null;			
+    												
     				OnPropertyChanged("IdEmpresaPadre");
     			}		
     		}
     	}	
     
+    	//Parents
     	protected internal Empresa_BE _Empresa;
         public virtual Empresa_BE Empresa
     	{
             get 
             {
-    			if (_Empresa == null) _Empresa = new Empresa_BE();
+    			if (IdEmpresaPadre != null)
+    			{
+    				if (_Empresa == null) _Empresa = new Empresa_BE();
     			
-    			if (!_Empresa.Loaded && IdEmpresaPadre != null)
-    			{	
-    				_Empresa.Id = IdEmpresaPadre;
-     
-                    new Empresa_BL().Load(_Empresa);
-    			}
-    				
-                return _Empresa;
+    				if (!_Empresa.Loaded)
+    				{
+    					_Empresa.Id = IdEmpresaPadre;				
+    					new Empresa_BL().Load(_Empresa);
+    				}
+    			}	
+    			
+    			return _Empresa;
             } 
     		set
     		{
                 if (value != _Empresa) 
     			{
-    				_Empresa = value;
+    				if (_Empresa != null)
+    					_Empresa.Empresas.Remove((Empresa_BE)this);
+    				if (value != null)
+    					value.Empresas.Add((Empresa_BE)this);
+    
+    				_Empresa = value;	
     				
-    				IdEmpresaPadre = _Empresa.Id;
-                
     				OnPropertyChanged("Empresa");
     			}
     		}
     	}
     
-        public virtual ObservableCollection<Sucursal_BE> SucursalesGet(int paramMaxDepth = 1)
-    	{
-    		if (this.Id != null)
-                return new ObservableCollection<Sucursal_BE>(new Sucursal_FL().LoadConvert(new Sucursal_FE() { Id = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth));	
+    	//Childs
+        void OnCollectionChanged_Empresas(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Empresa_BE item in e.NewItems)
+    			{
+    				item.IdEmpresaPadre = this.Id;			
+    			}
+            }
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Empresa_BE item in e.OldItems)
+    			{
+    				item.IdEmpresaPadre = null;			
+    			}
+            }
+        }
+        protected internal virtual ObservableCollection<Empresa_BE> _Empresas { get; set; }
+        public virtual ObservableCollection<Empresa_BE> Empresas 
+    	{ 
+    		get
+    		{
+                if (_Empresas == null)
+                    Empresas = Empresas_New(new List<Empresa_BE>());
     
-            return new ObservableCollection<Sucursal_BE>();
+                return _Empresas;		
+    		}
+    		set
+    		{
+    			_Empresas = value;	
+    			
+    			OnPropertyChanged("Empresas");
+    			
+    			_Empresas.CollectionChanged += this.OnCollectionChanged_Empresas;
+    		}
     	}
-        public virtual ObservableCollection<Sucursal_BE> SucursalesLoad(int paramMaxDepth = 1)
+    	public virtual ObservableCollection<Empresa_BE> Empresas_New(List<Empresa_BE> paramList)
+        {
+            return new ObservableCollection<Empresa_BE>(paramList);
+        }	
+        public virtual ObservableCollection<Empresa_BE> Empresas_Load(int paramMaxDepth = 1)
     	{
-    		return Sucursales = SucursalesGet(paramMaxDepth);
+    		return Empresas = Empresas_Get(paramMaxDepth);
     	}	
-        public virtual ObservableCollection<Sucursal_BE> Sucursales { get; set; }
-        public virtual ObservableCollection<Empresa_BE> EmpresaHijosGet(int paramMaxDepth = 1)
+    	public virtual ObservableCollection<Empresa_BE> Empresas_Get(int paramMaxDepth = 1)
     	{
-    		if (this.Id != null)
-                return new ObservableCollection<Empresa_BE>(new Empresa_FL().LoadConvert(new Empresa_FE() { IdEmpresaPadre = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth));	
+    		return Empresas_New(this.Exists ? new Empresa_FL().LoadConvert(new Empresa_FE() { IdEmpresaPadre = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth) : new List<Empresa_BE>());	
+    	}
+        void OnCollectionChanged_Sucursales(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Sucursal_BE item in e.NewItems)
+    			{
+    				item.IdEmpresa = this.Id;			
+    			}
+            }
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Sucursal_BE item in e.OldItems)
+    			{
+    				item.IdEmpresa = null;			
+    			}
+            }
+        }
+        protected internal virtual ObservableCollection<Sucursal_BE> _Sucursales { get; set; }
+        public virtual ObservableCollection<Sucursal_BE> Sucursales 
+    	{ 
+    		get
+    		{
+                if (_Sucursales == null)
+                    Sucursales = Sucursales_New(new List<Sucursal_BE>());
     
-            return new ObservableCollection<Empresa_BE>();
+                return _Sucursales;		
+    		}
+    		set
+    		{
+    			_Sucursales = value;	
+    			
+    			OnPropertyChanged("Sucursales");
+    			
+    			_Sucursales.CollectionChanged += this.OnCollectionChanged_Sucursales;
+    		}
     	}
-        public virtual ObservableCollection<Empresa_BE> EmpresaHijosLoad(int paramMaxDepth = 1)
+    	public virtual ObservableCollection<Sucursal_BE> Sucursales_New(List<Sucursal_BE> paramList)
+        {
+            return new ObservableCollection<Sucursal_BE>(paramList);
+        }	
+        public virtual ObservableCollection<Sucursal_BE> Sucursales_Load(int paramMaxDepth = 1)
     	{
-    		return EmpresaHijos = EmpresaHijosGet(paramMaxDepth);
+    		return Sucursales = Sucursales_Get(paramMaxDepth);
     	}	
-        public virtual ObservableCollection<Empresa_BE> EmpresaHijos { get; set; }
+    	public virtual ObservableCollection<Sucursal_BE> Sucursales_Get(int paramMaxDepth = 1)
+    	{
+    		return Sucursales_New(this.Exists ? new Sucursal_FL().LoadConvert(new Sucursal_FE() { IdEmpresa = new Filter<Nullable<int>>(this.Id) }, paramMaxDepth) : new List<Sucursal_BE>());	
+    	}
     }
 }
 
@@ -305,10 +375,7 @@ namespace Facel.Data.Accesses
             fields = AddField<Nullable<int>>(fields, "id_empresa_padre", System.Data.DbType.Int32, be.IdEmpresaPadre, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "ruc", System.Data.DbType.String, be.Ruc, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "razon_social", System.Data.DbType.String, be.RazonSocial, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "direccion", System.Data.DbType.String, be.Direccion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "direccion_fiscal", System.Data.DbType.String, be.DireccionFiscal, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "telefono", System.Data.DbType.String, be.Telefono, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "email", System.Data.DbType.String, be.Email, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "website", System.Data.DbType.String, be.Website, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "activo", System.Data.DbType.Boolean, be.Activo, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_emisor_electronico", System.Data.DbType.Boolean, be.EsEmisorElectronico, paramIsSourceColumn, paramTableAlias);
@@ -320,7 +387,7 @@ namespace Facel.Data.Accesses
             fields = AddField<string>(fields, "smtp_email", System.Data.DbType.String, be.SmtpEmail, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<int>>(fields, "puerto_email", System.Data.DbType.Int32, be.PuertoEmail, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_corporativo", System.Data.DbType.Boolean, be.EsCorporativo, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "ubigeo_distrito", System.Data.DbType.String, be.UbigeoDistrito, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<string>(fields, "ubigeo_fiscal", System.Data.DbType.String, be.UbigeoFiscal, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_agente_percepcion", System.Data.DbType.Boolean, be.EsAgentePercepcion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_agente_retencion", System.Data.DbType.Boolean, be.EsAgenteRetencion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_buen_contribuyente", System.Data.DbType.Boolean, be.EsBuenContribuyente, paramIsSourceColumn, paramTableAlias);
@@ -329,6 +396,7 @@ namespace Facel.Data.Accesses
             fields = AddField<Nullable<bool>>(fields, "en_produccion", System.Data.DbType.Boolean, be.EnProduccion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<byte[]>(fields, "logo", System.Data.DbType.Binary, be.Logo, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_ssl", System.Data.DbType.Boolean, be.EsSsl, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<string>(fields, "email", System.Data.DbType.String, be.Email, paramIsSourceColumn, paramTableAlias);
             
     		return fields;
         }
@@ -340,10 +408,7 @@ namespace Facel.Data.Accesses
     		be._IdEmpresaPadre = Conversion.To<Nullable<int>>(paramReader[TableColumn("id_empresa_padre")]);
     		be._Ruc = Conversion.To<string>(paramReader[TableColumn("ruc")]);
     		be._RazonSocial = Conversion.To<string>(paramReader[TableColumn("razon_social")]);
-    		be._Direccion = Conversion.To<string>(paramReader[TableColumn("direccion")]);
     		be._DireccionFiscal = Conversion.To<string>(paramReader[TableColumn("direccion_fiscal")]);
-    		be._Telefono = Conversion.To<string>(paramReader[TableColumn("telefono")]);
-    		be._Email = Conversion.To<string>(paramReader[TableColumn("email")]);
     		be._Website = Conversion.To<string>(paramReader[TableColumn("website")]);
     		be._Activo = Conversion.To<Nullable<bool>>(paramReader[TableColumn("activo")]);
     		be._EsEmisorElectronico = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_emisor_electronico")]);
@@ -355,7 +420,7 @@ namespace Facel.Data.Accesses
     		be._SmtpEmail = Conversion.To<string>(paramReader[TableColumn("smtp_email")]);
     		be._PuertoEmail = Conversion.To<Nullable<int>>(paramReader[TableColumn("puerto_email")]);
     		be._EsCorporativo = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_corporativo")]);
-    		be._UbigeoDistrito = Conversion.To<string>(paramReader[TableColumn("ubigeo_distrito")]);
+    		be._UbigeoFiscal = Conversion.To<string>(paramReader[TableColumn("ubigeo_fiscal")]);
     		be._EsAgentePercepcion = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_agente_percepcion")]);
     		be._EsAgenteRetencion = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_agente_retencion")]);
     		be._EsBuenContribuyente = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_buen_contribuyente")]);
@@ -364,6 +429,7 @@ namespace Facel.Data.Accesses
     		be._EnProduccion = Conversion.To<Nullable<bool>>(paramReader[TableColumn("en_produccion")]);
     		be._Logo = Conversion.To<byte[]>(paramReader[TableColumn("logo")]);
     		be._EsSsl = Conversion.To<Nullable<bool>>(paramReader[TableColumn("es_ssl")]);
+    		be._Email = Conversion.To<string>(paramReader[TableColumn("email")]);
       
             return be;
     	}
@@ -374,10 +440,7 @@ namespace Facel.Data.Accesses
     		be._IdEmpresaPadre = Conversion.To<Nullable<int>>(paramRow[TableColumn("id_empresa_padre")]);
     		be._Ruc = Conversion.To<string>(paramRow[TableColumn("ruc")]);
     		be._RazonSocial = Conversion.To<string>(paramRow[TableColumn("razon_social")]);
-    		be._Direccion = Conversion.To<string>(paramRow[TableColumn("direccion")]);
     		be._DireccionFiscal = Conversion.To<string>(paramRow[TableColumn("direccion_fiscal")]);
-    		be._Telefono = Conversion.To<string>(paramRow[TableColumn("telefono")]);
-    		be._Email = Conversion.To<string>(paramRow[TableColumn("email")]);
     		be._Website = Conversion.To<string>(paramRow[TableColumn("website")]);
     		be._Activo = Conversion.To<Nullable<bool>>(paramRow[TableColumn("activo")]);
     		be._EsEmisorElectronico = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_emisor_electronico")]);
@@ -389,7 +452,7 @@ namespace Facel.Data.Accesses
     		be._SmtpEmail = Conversion.To<string>(paramRow[TableColumn("smtp_email")]);
     		be._PuertoEmail = Conversion.To<Nullable<int>>(paramRow[TableColumn("puerto_email")]);
     		be._EsCorporativo = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_corporativo")]);
-    		be._UbigeoDistrito = Conversion.To<string>(paramRow[TableColumn("ubigeo_distrito")]);
+    		be._UbigeoFiscal = Conversion.To<string>(paramRow[TableColumn("ubigeo_fiscal")]);
     		be._EsAgentePercepcion = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_agente_percepcion")]);
     		be._EsAgenteRetencion = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_agente_retencion")]);
     		be._EsBuenContribuyente = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_buen_contribuyente")]);
@@ -398,6 +461,7 @@ namespace Facel.Data.Accesses
     		be._EnProduccion = Conversion.To<Nullable<bool>>(paramRow[TableColumn("en_produccion")]);
     		be._Logo = Conversion.To<byte[]>(paramRow[TableColumn("logo")]);
     		be._EsSsl = Conversion.To<Nullable<bool>>(paramRow[TableColumn("es_ssl")]);
+    		be._Email = Conversion.To<string>(paramRow[TableColumn("email")]);
       
             return be;
     	}
@@ -408,10 +472,7 @@ namespace Facel.Data.Accesses
     		be._IdEmpresaPadre = Conversion.To<Nullable<int>>(paramParameters[TableParameter("id_empresa_padre")].Value);
     		be._Ruc = Conversion.To<string>(paramParameters[TableParameter("ruc")].Value);
     		be._RazonSocial = Conversion.To<string>(paramParameters[TableParameter("razon_social")].Value);
-    		be._Direccion = Conversion.To<string>(paramParameters[TableParameter("direccion")].Value);
     		be._DireccionFiscal = Conversion.To<string>(paramParameters[TableParameter("direccion_fiscal")].Value);
-    		be._Telefono = Conversion.To<string>(paramParameters[TableParameter("telefono")].Value);
-    		be._Email = Conversion.To<string>(paramParameters[TableParameter("email")].Value);
     		be._Website = Conversion.To<string>(paramParameters[TableParameter("website")].Value);
     		be._Activo = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("activo")].Value);
     		be._EsEmisorElectronico = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_emisor_electronico")].Value);
@@ -423,7 +484,7 @@ namespace Facel.Data.Accesses
     		be._SmtpEmail = Conversion.To<string>(paramParameters[TableParameter("smtp_email")].Value);
     		be._PuertoEmail = Conversion.To<Nullable<int>>(paramParameters[TableParameter("puerto_email")].Value);
     		be._EsCorporativo = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_corporativo")].Value);
-    		be._UbigeoDistrito = Conversion.To<string>(paramParameters[TableParameter("ubigeo_distrito")].Value);
+    		be._UbigeoFiscal = Conversion.To<string>(paramParameters[TableParameter("ubigeo_fiscal")].Value);
     		be._EsAgentePercepcion = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_agente_percepcion")].Value);
     		be._EsAgenteRetencion = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_agente_retencion")].Value);
     		be._EsBuenContribuyente = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_buen_contribuyente")].Value);
@@ -432,6 +493,7 @@ namespace Facel.Data.Accesses
     		be._EnProduccion = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("en_produccion")].Value);
     		be._Logo = Conversion.To<byte[]>(paramParameters[TableParameter("logo")].Value);
     		be._EsSsl = Conversion.To<Nullable<bool>>(paramParameters[TableParameter("es_ssl")].Value);
+    		be._Email = Conversion.To<string>(paramParameters[TableParameter("email")].Value);
       
             return be;
     	}
@@ -443,10 +505,7 @@ namespace Facel.Data.Accesses
     		be._IdEmpresaPadre = null;
     		be._Ruc = null;
     		be._RazonSocial = null;
-    		be._Direccion = null;
     		be._DireccionFiscal = null;
-    		be._Telefono = null;
-    		be._Email = null;
     		be._Website = null;
     		be._Activo = null;
     		be._EsEmisorElectronico = null;
@@ -458,7 +517,7 @@ namespace Facel.Data.Accesses
     		be._SmtpEmail = null;
     		be._PuertoEmail = null;
     		be._EsCorporativo = null;
-    		be._UbigeoDistrito = null;
+    		be._UbigeoFiscal = null;
     		be._EsAgentePercepcion = null;
     		be._EsAgenteRetencion = null;
     		be._EsBuenContribuyente = null;
@@ -467,6 +526,7 @@ namespace Facel.Data.Accesses
     		be._EnProduccion = null;
     		be._Logo = null;
     		be._EsSsl = null;
+    		be._Email = null;
       
     		be._Empresa = null;
     
@@ -517,16 +577,16 @@ namespace Facel.Data.Logics
     
             if (paramValidateCascadeIntegrity)
             {
-                if (new Sucursal_BL().Count(new Sucursal_BE() { Id = be.Id }) > 0)
+                if (new Empresa_BL().Count(new Empresa_BE() { IdEmpresaPadre = be.Id }) > 0)
                 {
-                    paramField = "Sucursal";
+                    paramField = "Empresa";
     				paramMessage = LibraryFramework.V0006_TableDependencies;
     
                     return false;
                 }
-                if (new Empresa_BL().Count(new Empresa_BE() { IdEmpresaPadre = be.Id }) > 0)
+                if (new Sucursal_BL().Count(new Sucursal_BE() { IdEmpresa = be.Id }) > 0)
                 {
-                    paramField = "Empresa";
+                    paramField = "Sucursal";
     				paramMessage = LibraryFramework.V0006_TableDependencies;
     
                     return false;
@@ -545,15 +605,59 @@ namespace Facel.Data.Logics
     		foreach (Empresa_BE e in new Empresa_FL().LoadConvert(new Empresa_FL().Convert(be), 1))
     		{
     			if (ret == 1)
-    	            ret = new Sucursal_BL().Erase(new Sucursal_BE() { Id = e.Id }, false, paramIsSourceColumn); 
-    			if (ret == 1)
     	            ret = new Empresa_BL().Erase(new Empresa_BE() { IdEmpresaPadre = e.Id }, false, paramIsSourceColumn); 
+    			if (ret == 1)
+    	            ret = new Sucursal_BL().Erase(new Sucursal_BE() { IdEmpresa = e.Id }, false, paramIsSourceColumn); 
      		}
     		
     		if (ret == 1)
                 ret = base.EraseModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
             
     		return ret;
+        }	
+    	
+    	protected override byte SaveParent(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Empresa_BE be = (Empresa_BE)paramDE;
+    
+            byte ret = 1;
+    
+    		if (ret == 1)
+                ret = new Empresa_BL().Save(be.Empresa, paramStatus, paramCheckKeyEmpty, paramIsSourceColumn);
+    				
+            if (ret == 1)
+            {		
+    			if (be.Empresa != null) be.IdEmpresaPadre = be.Empresa.Id;		
+    		}
+    
+            return ret;
+        }
+        protected override byte SaveDetails(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            Empresa_BE be = (Empresa_BE)paramDE;
+    
+            byte ret = 1;
+    
+            if (ret == 1)
+            {		
+    			foreach (Empresa_BE beEmpresa in be.Empresas)
+    					beEmpresa.IdEmpresaPadre = be.Id;		
+    			foreach (Sucursal_BE beSucursal in be.Sucursales)
+    					beSucursal.IdEmpresa = be.Id;        
+    		} 
+    		
+            if (ret == 1)
+            {		
+    			foreach (Empresa_BE beEmpresa in be.Empresas)
+                    if (ret == 1)
+                        ret = new Empresa_BL().Save(beEmpresa, paramStatus, paramCheckKeyEmpty, paramIsSourceColumn);
+    		
+    			foreach (Sucursal_BE beSucursal in be.Sucursales)
+                    if (ret == 1)
+                        ret = new Sucursal_BL().Save(beSucursal, paramStatus, paramCheckKeyEmpty, paramIsSourceColumn);
+    		}		
+            
+            return ret;
         }	
     }
 }
@@ -566,7 +670,7 @@ namespace Facel.Business.Logics
         protected override Access GetDA()
         {
             return new Empresa_BA(TableName, ConnectionStringName);
-        }	
+        }		
     }
     
 }
@@ -580,10 +684,7 @@ namespace Facel.Join.Entities
         public virtual Filter<Nullable<int>> IdEmpresaPadre { get; set; }
         public virtual Filter<string> Ruc { get; set; }
         public virtual Filter<string> RazonSocial { get; set; }
-        public virtual Filter<string> Direccion { get; set; }
         public virtual Filter<string> DireccionFiscal { get; set; }
-        public virtual Filter<string> Telefono { get; set; }
-        public virtual Filter<string> Email { get; set; }
         public virtual Filter<string> Website { get; set; }
         public virtual Filter<Nullable<bool>> Activo { get; set; }
         public virtual Filter<Nullable<bool>> EsEmisorElectronico { get; set; }
@@ -595,7 +696,7 @@ namespace Facel.Join.Entities
         public virtual Filter<string> SmtpEmail { get; set; }
         public virtual Filter<Nullable<int>> PuertoEmail { get; set; }
         public virtual Filter<Nullable<bool>> EsCorporativo { get; set; }
-        public virtual Filter<string> UbigeoDistrito { get; set; }
+        public virtual Filter<string> UbigeoFiscal { get; set; }
         public virtual Filter<Nullable<bool>> EsAgentePercepcion { get; set; }
         public virtual Filter<Nullable<bool>> EsAgenteRetencion { get; set; }
         public virtual Filter<Nullable<bool>> EsBuenContribuyente { get; set; }
@@ -604,13 +705,15 @@ namespace Facel.Join.Entities
         public virtual Filter<Nullable<bool>> EnProduccion { get; set; }
         public virtual Filter<byte[]> Logo { get; set; }
         public virtual Filter<Nullable<bool>> EsSsl { get; set; }
+        public virtual Filter<string> Email { get; set; }
     
     	protected Empresa_FE _EmpresaPadre;
         public Empresa_FE EmpresaPadre
     	{
             get 
             {
-                _EmpresaPadre = _EmpresaPadre ?? new Empresa_FE();
+                if (IdEmpresaPadre != null)
+                    _EmpresaPadre = _EmpresaPadre ?? new Empresa_FE();
                 return _EmpresaPadre;
             } 
     		set
@@ -660,10 +763,7 @@ namespace Facel.Join.Accesses
             fields = AddField<Nullable<int>>(fields, "id_empresa_padre", System.Data.DbType.Int32, be.IdEmpresaPadre, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "ruc", System.Data.DbType.String, be.Ruc, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "razon_social", System.Data.DbType.String, be.RazonSocial, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "direccion", System.Data.DbType.String, be.Direccion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "direccion_fiscal", System.Data.DbType.String, be.DireccionFiscal, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "telefono", System.Data.DbType.String, be.Telefono, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "email", System.Data.DbType.String, be.Email, paramIsSourceColumn, paramTableAlias);
             fields = AddField<string>(fields, "website", System.Data.DbType.String, be.Website, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "activo", System.Data.DbType.Boolean, be.Activo, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_emisor_electronico", System.Data.DbType.Boolean, be.EsEmisorElectronico, paramIsSourceColumn, paramTableAlias);
@@ -675,7 +775,7 @@ namespace Facel.Join.Accesses
             fields = AddField<string>(fields, "smtp_email", System.Data.DbType.String, be.SmtpEmail, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<int>>(fields, "puerto_email", System.Data.DbType.Int32, be.PuertoEmail, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_corporativo", System.Data.DbType.Boolean, be.EsCorporativo, paramIsSourceColumn, paramTableAlias);
-            fields = AddField<string>(fields, "ubigeo_distrito", System.Data.DbType.String, be.UbigeoDistrito, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<string>(fields, "ubigeo_fiscal", System.Data.DbType.String, be.UbigeoFiscal, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_agente_percepcion", System.Data.DbType.Boolean, be.EsAgentePercepcion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_agente_retencion", System.Data.DbType.Boolean, be.EsAgenteRetencion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_buen_contribuyente", System.Data.DbType.Boolean, be.EsBuenContribuyente, paramIsSourceColumn, paramTableAlias);
@@ -684,6 +784,7 @@ namespace Facel.Join.Accesses
             fields = AddField<Nullable<bool>>(fields, "en_produccion", System.Data.DbType.Boolean, be.EnProduccion, paramIsSourceColumn, paramTableAlias);
             fields = AddField<byte[]>(fields, "logo", System.Data.DbType.Binary, be.Logo, paramIsSourceColumn, paramTableAlias);
             fields = AddField<Nullable<bool>>(fields, "es_ssl", System.Data.DbType.Boolean, be.EsSsl, paramIsSourceColumn, paramTableAlias);
+            fields = AddField<string>(fields, "email", System.Data.DbType.String, be.Email, paramIsSourceColumn, paramTableAlias);
             
     		return fields;
         }
@@ -742,13 +843,13 @@ namespace Facel.Join.Logics
             return new Empresa_JA(TableName, ConnectionStringName);
         }
     	
-    	public ObservableCollection<Empresa_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
+    	public List<Empresa_BE> LoadConvert(Enumerate paramDE, int paramMaxDepth = 0, TypeLoad paramTypeLoad = TypeLoad.DataReader, bool paramIsSourceColumn = false,
                 int paramTop = 0,
     			int paramRowFrom = 0, int paramRowTo = 0)
         {
-        	return new ObservableCollection<Empresa_BE>(Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
+        	return Load(paramDE, paramMaxDepth, paramTypeLoad, paramIsSourceColumn,
                     paramTop,
-    				paramRowFrom, paramRowTo).ConvertAll(x => x as Empresa_BE));
+    				paramRowFrom, paramRowTo).ConvertAll(x => x as Empresa_BE);
         }
     	public Empresa_FE Convert(Empresa_BE paramDE)
         {
@@ -758,10 +859,7 @@ namespace Facel.Join.Logics
     		be.IdEmpresaPadre = new Filter<Nullable<int>>(paramDE.IdEmpresaPadre);
     		be.Ruc = new Filter<string>(paramDE.Ruc);
     		be.RazonSocial = new Filter<string>(paramDE.RazonSocial);
-    		be.Direccion = new Filter<string>(paramDE.Direccion);
     		be.DireccionFiscal = new Filter<string>(paramDE.DireccionFiscal);
-    		be.Telefono = new Filter<string>(paramDE.Telefono);
-    		be.Email = new Filter<string>(paramDE.Email);
     		be.Website = new Filter<string>(paramDE.Website);
     		be.Activo = new Filter<Nullable<bool>>(paramDE.Activo);
     		be.EsEmisorElectronico = new Filter<Nullable<bool>>(paramDE.EsEmisorElectronico);
@@ -773,7 +871,7 @@ namespace Facel.Join.Logics
     		be.SmtpEmail = new Filter<string>(paramDE.SmtpEmail);
     		be.PuertoEmail = new Filter<Nullable<int>>(paramDE.PuertoEmail);
     		be.EsCorporativo = new Filter<Nullable<bool>>(paramDE.EsCorporativo);
-    		be.UbigeoDistrito = new Filter<string>(paramDE.UbigeoDistrito);
+    		be.UbigeoFiscal = new Filter<string>(paramDE.UbigeoFiscal);
     		be.EsAgentePercepcion = new Filter<Nullable<bool>>(paramDE.EsAgentePercepcion);
     		be.EsAgenteRetencion = new Filter<Nullable<bool>>(paramDE.EsAgenteRetencion);
     		be.EsBuenContribuyente = new Filter<Nullable<bool>>(paramDE.EsBuenContribuyente);
@@ -782,6 +880,7 @@ namespace Facel.Join.Logics
     		be.EnProduccion = new Filter<Nullable<bool>>(paramDE.EnProduccion);
     		be.Logo = new Filter<byte[]>(paramDE.Logo);
     		be.EsSsl = new Filter<Nullable<bool>>(paramDE.EsSsl);
+    		be.Email = new Filter<string>(paramDE.Email);
       
             return be;
         }	

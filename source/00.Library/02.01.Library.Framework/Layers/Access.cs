@@ -24,11 +24,11 @@ namespace Library.Framework.Layers
             {
                 string sServer = Database.GetConnectionStringKey(ConnectionStringName, "Data Source");
                 sServer = (sServer.Substring(0, 1) == "."
-                    ? System.Environment.MachineName + sServer.Substring(1, sServer.Length - 1)
+                    ? sServer.Substring(1, sServer.Length - 1)
                     : sServer);
                 string sDatabase = Database.GetConnectionStringKey(ConnectionStringName, "Initial Catalog");
 
-                return String.Format("[{0}].[{1}].dbo.[{2}]", sServer, sDatabase, TableName);
+                return String.Format("[{0}]..[{1}]", sDatabase, TableName);
             }
         }
 

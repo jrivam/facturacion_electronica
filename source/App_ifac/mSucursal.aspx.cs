@@ -1,7 +1,9 @@
 ﻿using Facel.Business.Entities;
 using Facel.Business.Logics;
 using System;
+using System.Transactions;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 
 namespace App_ifac
 {
@@ -10,6 +12,9 @@ namespace App_ifac
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Page.IsPostBack) return;
+
+            cboEmpresa.DataSource = new Empresa_BL().GetDataCombo(new Empresa_BE(), "empresa_id", "empresa_razon_social");
+            cboEmpresa.DataBind();
 
             var id = Request.QueryString["id"];
 
@@ -20,7 +25,15 @@ namespace App_ifac
 
             Buscar();
         }
+        protected void btnGrabar_Click(object sender, EventArgs e)
+        {
+            Grabar();
+        }
 
+        protected void btnActualizar_Click(object sender, EventArgs e)
+        {
+            Grabar();
+        }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             Buscar();
@@ -40,6 +53,11 @@ namespace App_ifac
 
             txtNombreSucursal.Text = be.Nombre;
             txtDireccionSucursal.Text = be.Direccion;
+            txtTelefono.Text = be.Telefono;
+
+            ((HtmlInputCheckBox)Page.Form.FindControl("mainBody").FindControl("chkEsPrincipal")).Checked = be.EsPrincipal ?? be.EsPrincipal.Value;
+
+            ((HtmlInputCheckBox)Page.Form.FindControl("mainBody").FindControl("chkActivo")).Checked = be.Activo ?? be.Activo.Value;
         }
         protected void Grabar()
         {
@@ -55,7 +73,22 @@ namespace App_ifac
             be.Nombre = txtNombreSucursal.Text;
             be.Direccion = txtDireccionSucursal.Text;
 
-            new Sucursal_BL().Save(be);
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    if (new Sucursal_BL().Save(be, Library.Framework.Layers.SaveStatus.Complete) == 1)
+                    {
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            
         }
     }
 }

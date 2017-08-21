@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="00.01.01.Library.Common">
+      <HintPath>..\..\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="00.02.01.Library.Framework">
+      <HintPath>..\..\00.Library\02.01.Library.Framework\bin\Debug\00.02.01.Library.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -55,6 +61,15 @@
     <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Percepcion_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Percepcion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Percepcion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
@@ -62,6 +77,15 @@
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Agentes_Retencion_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Buenos_Contribuyentes_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Buenos_Contribuyentes_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Buenos_Contribuyentes_GM.cs">
@@ -82,6 +106,15 @@
     <Compile Include="..\02.01.Facel.Model\1.Generated\Concepto_Venta_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Concepto_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Concepto_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
@@ -89,6 +122,15 @@
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Detracciones_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documentos_Venta_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documentos_Venta_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Documentos_Venta_GM.cs">
@@ -109,6 +151,15 @@
     <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Identidad_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Identidad_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Identidad_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
@@ -116,6 +167,15 @@
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Documento_Serie_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Empresa_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Empresa_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Empresa_GM.cs">
@@ -136,6 +196,15 @@
     <Compile Include="..\02.01.Facel.Model\1.Generated\Forma_Pago_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Forma_Pago_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Forma_Pago_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
@@ -143,6 +212,15 @@
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Igv_Vigente_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Moneda_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Moneda_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Moneda_GM.cs">
@@ -163,6 +241,15 @@
     <Compile Include="..\02.01.Facel.Model\1.Generated\Sucursal_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Sucursal_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Sucursal_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
@@ -170,6 +257,15 @@
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Tipo_Cambio_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Unidad_Medida_GM.cs">
+      <DependentUpon>G_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\02.01.Facel.Model\1.Generated\Unidad_Medida_GM.cs">
       <DependentUpon>G_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="..\02.01.Facel.Model\1.Generated\Unidad_Medida_GM.cs">
@@ -287,16 +383,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="..\02.01.Facel.Model\1.Generated\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\00.Library\01.01.Library.Common\00.01.01.Library.Common.csproj">
-      <Project>{b9ec8e35-9954-4b43-8b40-25312854cf1c}</Project>
-      <Name>00.01.01.Library.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\00.Library\02.01.Library.Framework\00.02.01.Library.Framework.csproj">
-      <Project>{f97d54b8-b321-4d14-8ee8-a62f2c4d5b90}</Project>
-      <Name>00.02.01.Library.Framework</Name>
-    </ProjectReference>
+    <Folder Include="B_Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

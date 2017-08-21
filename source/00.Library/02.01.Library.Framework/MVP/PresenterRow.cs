@@ -141,7 +141,7 @@ namespace Library.Framework.MVP
 
         public bool Undo()
         {
-            if (View.Entity.Loaded)
+            if (View.EntityViewRow.Exists)
                 return Locate(false);
 
             return Find();
@@ -198,29 +198,29 @@ namespace Library.Framework.MVP
         public byte Load()
         {
             if (Logic != null)
-                return Logic.Load(View.Entity);
+                return Logic.Load(View.EntityViewRow);
             
             return 0;
         }
         public void Clear()
         {
             if (Logic != null)
-                Logic.Clear(View.Entity);
+                Logic.Clear(View.EntityViewRow);
         }
 
         public void SetEntityValues(bool paramData = true, bool paramKey = true)
         {
             if (paramKey)
-                Manten.SetEntityKeyValues(View.MantenStatus, View.Entity);
+                Manten.SetEntityKeyValues(View.MantenStatus, View.EntityViewRow);
             if (paramData)
-                Manten.SetEntityDataValues(View.MantenStatus, View.Entity);
+                Manten.SetEntityDataValues(View.MantenStatus, View.EntityViewRow);
         }
         public void SetViewValues(bool paramData = true, bool paramKey = true)
         {
             if (paramKey)
-                Manten.SetViewKeyValues(View.MantenStatus, View.Entity);
+                Manten.SetViewKeyValues(View.MantenStatus, View.EntityViewRow);
             if (paramData)
-                Manten.SetViewDataValues(View.MantenStatus, View.Entity);
+                Manten.SetViewDataValues(View.MantenStatus, View.EntityViewRow);
         }
 
         public bool Save(bool paramViewInput = true)
@@ -237,7 +237,7 @@ namespace Library.Framework.MVP
             if (bOk)
             {
                 SetEntityValues();
-                bOk = Logic.ValidateSave(View.Entity, ref Field, ref Message);
+                bOk = Logic.ValidateSave(View.EntityViewRow, ref Field, ref Message);
             }
 
             if (bOk)
@@ -252,7 +252,7 @@ namespace Library.Framework.MVP
                                 bOk = View.SaveMaster(bOk);
                             if (Logic != null)
                                 if (bOk)
-                                    bOk = (Logic.Save(View.Entity) == 1);
+                                    bOk = (Logic.Save(View.EntityViewRow, 0) == 1);
                             if (bOk)
                                 bOk = View.SaveDetail(bOk);
 
@@ -262,7 +262,7 @@ namespace Library.Framework.MVP
 
                         if (Logic != null)
                             if (bOk)
-                                bOk = Logic.VerifySave(View.Entity);
+                                bOk = Logic.VerifySave(View.EntityViewRow);
                     }
 
                     if (paramViewInput)
@@ -318,7 +318,7 @@ namespace Library.Framework.MVP
                     bOk = View.ValidateErase(ref Field, ref Message);
 
             if (bOk)
-                bOk = Logic.ValidateErase(View.Entity, ref Field, ref Message, paramValidateCascadeIntegrity);
+                bOk = Logic.ValidateErase(View.EntityViewRow, ref Field, ref Message, paramValidateCascadeIntegrity);
 
             if (bOk)
             {
@@ -333,7 +333,7 @@ namespace Library.Framework.MVP
                                 bOk = View.EraseMaster(bOk);
                             if (Logic != null)
                                 if (bOk)
-                                    bOk = (Logic.Erase(View.Entity) == 1);
+                                    bOk = (Logic.Erase(View.EntityViewRow) == 1);
                             if (bOk)
                                 bOk = View.EraseDetail(bOk);
 
@@ -343,7 +343,7 @@ namespace Library.Framework.MVP
 
                         if (Logic != null)
                             if (bOk)
-                                bOk = Logic.VerifyErase(View.Entity);
+                                bOk = Logic.VerifyErase(View.EntityViewRow);
 
                     }
 

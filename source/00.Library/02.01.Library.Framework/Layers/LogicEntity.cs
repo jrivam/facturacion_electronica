@@ -58,7 +58,7 @@ namespace Library.Framework.Layers
 
             if (bOk)
             {
-                if (paramDE.Loaded)
+                if (paramDE.Exists)
                     bOk = ValidateUpdate(paramDE, ref paramField, ref paramMessage);
                 else
                     bOk = ValidateInsert(paramDE, ref paramField, ref paramMessage);
@@ -99,10 +99,87 @@ namespace Library.Framework.Layers
         }
 
         //comandos
-        public virtual byte Save(Entity paramDE, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        public virtual bool SumTotals(Entity paramDE)
         {
-            return SaveModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
+            return false;
         }
+
+        protected virtual byte SaveBefore(Entity paramDE)
+        {
+            byte ret = 1;
+
+            return ret;
+        }
+        protected virtual byte SaveAfter(Entity paramDE)
+        {
+            byte ret = 1;
+
+            return ret;
+        }
+        protected virtual byte SaveParent(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            byte ret = 1;
+
+            return ret;
+        }
+        protected virtual byte SaveDetails(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            byte ret = 1;
+
+            return ret;
+        }
+        protected virtual byte SaveUpdate(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            byte ret = 1;
+
+            return ret;
+        }
+        public virtual byte Save(Entity paramDE, SaveStatus paramStatus, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
+        {
+            byte ret = 1;
+
+            if (paramDE != null)
+            {
+                if (!paramDE.Saved)
+                {
+                    if (paramStatus == SaveStatus.Complete || (paramStatus == SaveStatus.Parent || paramStatus == SaveStatus.Detail))
+                    {
+                        if (ret == 1)
+                            ret = SaveParent(paramDE, SaveStatus.Parent, paramCheckKeyEmpty, paramIsSourceColumn);
+
+                        if (ret == 1)
+                        {
+                            SaveBefore(paramDE);
+                            ret = SaveModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
+                            SaveAfter(paramDE);
+                        }
+
+
+                        if (ret == 1)
+
+                            ret = SaveDetails(paramDE, SaveStatus.Detail, paramCheckKeyEmpty, paramIsSourceColumn);
+                    }
+                }
+
+                if (paramStatus == SaveStatus.Complete || paramStatus == SaveStatus.Detail || paramStatus == SaveStatus.Update)
+                { 
+                    if (ret == 1)
+                    {
+                        if (SumTotals(paramDE))
+                            ret = SaveModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
+                    }
+                } 
+
+                if (paramStatus == SaveStatus.Complete || paramStatus == SaveStatus.Update)
+                {               
+                    if (ret == 1)
+                        ret = SaveUpdate(paramDE, SaveStatus.Update, paramCheckKeyEmpty, paramIsSourceColumn);
+                }
+            }
+
+            return ret; 
+        }
+
         public virtual byte Erase(Entity paramDE, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
         {
             return EraseModel(paramDE, paramCheckKeyEmpty, paramIsSourceColumn);
@@ -115,7 +192,7 @@ namespace Library.Framework.Layers
         public virtual byte SaveModel(Entity paramDE, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
         {
             bool bKeyEmpty = DA.KeyIsEmpty(paramDE);
-            if (paramDE.Loaded && paramCheckKeyEmpty && bKeyEmpty)
+            if (paramDE.Exists && paramCheckKeyEmpty && bKeyEmpty)
                 return 2;
             else
                 return Convert.ToByte(DA.Save(paramDE, bKeyEmpty, paramIsSourceColumn));
@@ -123,7 +200,7 @@ namespace Library.Framework.Layers
         public virtual byte EraseModel(Entity paramDE, bool paramCheckKeyEmpty = true, bool paramIsSourceColumn = false)
         {
             bool bKeyEmpty = DA.KeyIsEmpty(paramDE);
-            if (paramDE.Loaded && paramCheckKeyEmpty && bKeyEmpty)
+            if (paramDE.Exists && paramCheckKeyEmpty && bKeyEmpty)
                 return 2;
             else
                 return Convert.ToByte(DA.Erase(paramDE, bKeyEmpty, paramIsSourceColumn));
