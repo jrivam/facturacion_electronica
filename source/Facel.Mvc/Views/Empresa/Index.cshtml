@@ -1,0 +1,171 @@
+﻿@model IEnumerable<Facel.Business.Entities.Empresa_BE>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Ruc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DireccionFiscal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Website)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Activo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsEmisorElectronico)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UsuarioSunat)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClaveSunat)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RutaFirmaDigital)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailEnvio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClaveEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SmtpEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PuertoEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsCorporativo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UbigeoFiscal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsAgentePercepcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsAgenteRetencion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsBuenContribuyente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Homologado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnPruebas)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnProduccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsSsl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            Empresa Padre
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ruc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RazonSocial)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DireccionFiscal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Website)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Activo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsEmisorElectronico)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UsuarioSunat)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClaveSunat)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RutaFirmaDigital)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmailEnvio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClaveEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SmtpEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PuertoEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsCorporativo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UbigeoFiscal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsAgentePercepcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsAgenteRetencion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsBuenContribuyente)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Homologado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnPruebas)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnProduccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsSsl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Empresa.RazonSocial)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

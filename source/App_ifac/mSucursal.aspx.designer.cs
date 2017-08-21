@@ -31,6 +31,15 @@ namespace App_ifac {
         protected global::System.Web.UI.WebControls.Button btnBuscar;
         
         /// <summary>
+        /// cboEmpresa control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cboEmpresa;
+        
+        /// <summary>
         /// txtNombreSucursal control.
         /// </summary>
         /// <remarks>
@@ -47,6 +56,15 @@ namespace App_ifac {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDireccionSucursal;
+        
+        /// <summary>
+        /// txtTelefono control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTelefono;
         
         /// <summary>
         /// cboDepartamento control.
@@ -74,6 +92,15 @@ namespace App_ifac {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cboDistrito;
+        
+        /// <summary>
+        /// chkEsPrincipal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkEsPrincipal;
         
         /// <summary>
         /// btnCancelar control.

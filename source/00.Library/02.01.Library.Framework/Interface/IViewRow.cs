@@ -6,7 +6,7 @@ namespace Library.Framework.Interface
 {
     public interface IViewRow
     {
-        Entity Entity { get; set; }
+        Entity EntityViewRow { get; set; }
 
         EnumMantenStatus MantenStatus { get; set; }
 

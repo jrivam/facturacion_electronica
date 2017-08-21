@@ -95,14 +95,13 @@
     <EntitySetMapping Name="empresa">
       <EntityTypeMapping TypeName="facelModel.empresa">
         <MappingFragment StoreEntitySet="empresa">
+          <ScalarProperty Name="ubigeo_fiscal" ColumnName="ubigeo_fiscal" />
           <ScalarProperty Name="es_ssl" ColumnName="es_ssl" />
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="id_empresa_padre" ColumnName="id_empresa_padre" />
           <ScalarProperty Name="ruc" ColumnName="ruc" />
           <ScalarProperty Name="razon_social" ColumnName="razon_social" />
-          <ScalarProperty Name="direccion" ColumnName="direccion" />
           <ScalarProperty Name="direccion_fiscal" ColumnName="direccion_fiscal" />
-          <ScalarProperty Name="telefono" ColumnName="telefono" />
           <ScalarProperty Name="email" ColumnName="email" />
           <ScalarProperty Name="website" ColumnName="website" />
           <ScalarProperty Name="activo" ColumnName="activo" />
@@ -115,7 +114,6 @@
           <ScalarProperty Name="smtp_email" ColumnName="smtp_email" />
           <ScalarProperty Name="puerto_email" ColumnName="puerto_email" />
           <ScalarProperty Name="es_corporativo" ColumnName="es_corporativo" />
-          <ScalarProperty Name="ubigeo_distrito" ColumnName="ubigeo_distrito" />
           <ScalarProperty Name="es_agente_percepcion" ColumnName="es_agente_percepcion" />
           <ScalarProperty Name="es_agente_retencion" ColumnName="es_agente_retencion" />
           <ScalarProperty Name="es_buen_contribuyente" ColumnName="es_buen_contribuyente" />
@@ -161,6 +159,8 @@
     <EntitySetMapping Name="sucursal">
       <EntityTypeMapping TypeName="facelModel.sucursal">
         <MappingFragment StoreEntitySet="sucursal">
+          <ScalarProperty Name="es_principal" ColumnName="es_principal" />
+          <ScalarProperty Name="telefono" ColumnName="telefono" />
           <ScalarProperty Name="id_empresa" ColumnName="id_empresa" />
           <ScalarProperty Name="nombre" ColumnName="nombre" />
           <ScalarProperty Name="direccion" ColumnName="direccion" />

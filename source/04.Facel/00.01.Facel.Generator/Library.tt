@@ -6,8 +6,8 @@
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #> 
-<#@ assembly name="$(SolutionDir)..\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll" #>
-<#@ assembly name="$(SolutionDir)..\00.Library\02.01.Library.Framework\bin\Debug\00.02.01.Library.Framework.dll" #>
+<#@ assembly name="$(SolutionDir)..\..\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll" #>
+<#@ assembly name="$(SolutionDir)..\..\00.Library\02.01.Library.Framework\bin\Debug\00.02.01.Library.Framework.dll" #>
 
 <#+
 bool IsID(EntityType entity)
