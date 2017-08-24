@@ -2,6 +2,7 @@
 using Facel.Business.Logics;
 using Facel.Filter.Entities;
 using Facel.Filter.Logics;
+using Library.Framework.Data;
 using System;
 using System.Net;
 using System.Web.Http;
@@ -10,11 +11,14 @@ namespace Facel.WebApi.Controllers
 {
     public class EmpresaController : ApiController
     {
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(string search = "")
         {
             try
             {
                 Empresa_FE be = new Empresa_FE();
+
+                if (search != "")
+                    be.RazonSocial = new Filter<string>(search, false, Operator.Like);
 
                 var list = new Empresa_FL().LoadConvert(be);
 

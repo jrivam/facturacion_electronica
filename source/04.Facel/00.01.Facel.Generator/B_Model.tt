@@ -1,6 +1,5 @@
 ﻿<#@ template language="C#" debug="false" hostspecific="true"#>
 <#@ include file="Library.tt"#>
-<#@ include file="Model.tt"#>
 <#@ output extension=".cs"#>
 <#
 
@@ -9,8 +8,7 @@ MetadataLoader loader = new MetadataLoader(this);
 CodeRegion region = new CodeRegion(this, 1);
 MetadataTools ef = new MetadataTools(this);
 
-string namespaceName = GetName();
-string inputFile = namespaceName + @".edmx";
+string inputFile = modelName + @".edmx";
 EdmItemCollection ItemCollection = loader.CreateEdmItemCollection(inputFile);
 
 EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this);
@@ -30,14 +28,14 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
 
 	if (1==1)
 	{
-		fileManager.StartNewFile("B_Model\\" + CaseToCamel(entity.Name) + "_BM.cs");
+		fileManager.StartNewFile("B_Model\\" + CaseToCamelWPrefix(entity.Name) + "_BM.cs");
 #>
 
 //BusinessEntity
 <#
     BeginNamespace(namespaceName + ".Data.Entities", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_DE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 }
 <#
@@ -46,7 +44,7 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
 <#
     BeginNamespace(namespaceName + ".Business.Entities", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_BE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 }
 <#
@@ -57,7 +55,7 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
 <#
     BeginNamespace(namespaceName + ".Data.Accesses", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_DA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {	
 }
 <#
@@ -66,11 +64,11 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
 <#
     BeginNamespace(namespaceName + ".Business.Accesses", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_BA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 	//protected override DbCommand GetCommandData(DbCommand paramCommand, Entity paramDE, string paramType, bool paramIsSourceColumn = false)
     //{
-        //<#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+        //<#=CaseToCamelWPrefix(code.Escape(entity))#>_BE be = (<#=CaseToCamelWPrefix(code.Escape(entity))#>_BE)paramDE;
 
 		//paramCommand.CommandText = "gsp_<#=code.Escape(entity)#>_data";
         //paramCommand.Parameters.Add(Database.GetParameter(ConnectionStringName, "@param_type", System.Data.DbType.String, paramType));
@@ -79,7 +77,7 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
     //}
     //protected override DbCommand GetCommandKey(DbCommand paramCommand, Entity paramDE, string paramType, bool paramIsSourceColumn = false)
     //{
-        //<#=CaseToCamel(code.Escape(entity))#>_BE be = (<#=CaseToCamel(code.Escape(entity))#>_BE)paramDE;
+        //<#=CaseToCamelWPrefix(code.Escape(entity))#>_BE be = (<#=CaseToCamelWPrefix(code.Escape(entity))#>_BE)paramDE;
 
         //paramCommand.CommandText = "gsp_<#=code.Escape(entity)#>_key";
         //paramCommand.Parameters.Add(Database.GetParameter(ConnectionStringName, "@param_type", System.Data.DbType.String, paramType));
@@ -95,9 +93,9 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
 <#
     BeginNamespace(namespaceName + ".Data.Logics", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_DL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_DL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
-    <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_DL(string paramEntityName = "<#=CaseToCamel(code.Escape(entity))#>",
+    <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamelWPrefix(code.Escape(entity))#>_DL(string paramEntityName = "<#=CaseToCamel(code.Escape(entity))#>",
 	string paramTableName = "<#=code.Escape(entity)#>", string paramConnectionStringName = <#=namespaceName#>Main.ConnectionStringName)
         : base(paramEntityName,
 		paramTableName, paramConnectionStringName)
@@ -110,7 +108,7 @@ foreach (EntityType entity in ItemCollection.GetItems<EntityType>().OrderBy(e =>
 <#
     BeginNamespace(namespaceName + ".Business.Logics", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_BL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_BL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 	protected override bool ValidateInsert(Entity paramDE, ref string paramField, ref string paramMessage)
     {
@@ -141,7 +139,7 @@ foreach (EdmProperty edmProperty in entity.Properties.Where(p => p.TypeUsage.Edm
                 if (i == 0)
                 {#><#}
 				i++;#>	
-				if (paramField == "<#=CaseToCamel(code.Escape(p), false)#>")
+				if (paramField == "<#=CaseToCamel(code.Escape(p))#>")
 					paramMessage = string.Format(LibraryFramework.V0005_FieldEmpty, "el <#=CaseToCamel(code.Escape(navProperty.ToEndMember.GetEntityType()))#>");
 <#
 			}
@@ -198,7 +196,7 @@ foreach (NavigationProperty navProperty in entity.NavigationProperties.Where(np 
 <#
 BeginNamespace(namespaceName + ".Join.Entities", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_JE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 }
 <#
@@ -207,7 +205,7 @@ EndNamespace(namespaceName);
 <#
 BeginNamespace(namespaceName + ".Filter.Entities", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_FE<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 }
 <#
@@ -218,7 +216,7 @@ EndNamespace(namespaceName);
 <#
 BeginNamespace(namespaceName + ".Join.Accesses", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_JA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {	
 }
 <#
@@ -227,7 +225,7 @@ EndNamespace(namespaceName);
 <#
 BeginNamespace(namespaceName + ".Filter.Accesses", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_FA<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {	
 }
 <#
@@ -238,9 +236,9 @@ EndNamespace(namespaceName);
 <#
 BeginNamespace(namespaceName + ".Join.Logics", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_JL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_JL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
-    <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamel(code.Escape(entity))#>_JL(string paramEntityName = "<#=CaseToCamel(code.Escape(entity))#>",
+    <#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#> <#=CaseToCamelWPrefix(code.Escape(entity))#>_JL(string paramEntityName = "<#=CaseToCamel(code.Escape(entity))#>",
 	string paramTableName = "<#=code.Escape(entity)#>", string paramConnectionStringName = <#=namespaceName#>Main.ConnectionStringName)
         : base(paramEntityName,
 		paramTableName, paramConnectionStringName)
@@ -253,7 +251,7 @@ EndNamespace(namespaceName);
 <#
 BeginNamespace(namespaceName + ".Filter.Logics", code);
 #>
-<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamel(code.Escape(entity))#>_FL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
+<#=Accessibility.ForType(entity)#> <#=code.SpaceAfter(code.AbstractOption(entity))#>partial class <#=CaseToCamelWPrefix(code.Escape(entity))#>_FL<#=code.StringBefore(" : ", code.Escape(entity.BaseType))#>
 {
 }
 <#
