@@ -25,3 +25,12 @@ S:\version\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debu
 S:\version\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\obj\Debug\04.01.01.Facel.Main.csprojResolveAssemblyReference.cache
 S:\version\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\obj\Debug\04.01.01.Facel.Main.dll
 S:\version\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\obj\Debug\04.01.01.Facel.Main.pdb
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debug\04.01.01.Facel.Main.dll
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debug\04.01.01.Facel.Main.pdb
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debug\00.01.01.Library.Common.dll
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debug\00.02.01.Library.Framework.dll
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debug\00.01.01.Library.Common.pdb
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\bin\Debug\00.02.01.Library.Framework.pdb
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\obj\Debug\04.01.01.Facel.Main.csprojResolveAssemblyReference.cache
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\obj\Debug\04.01.01.Facel.Main.dll
+C:\develop\git\facturacion_electronica\source\04.Facel\01.01.Facel.Main\obj\Debug\04.01.01.Facel.Main.pdb

@@ -2,6 +2,7 @@
 using Facel.Business.Logics;
 using Facel.Filter.Entities;
 using Facel.Filter.Logics;
+using Library.Framework.Data;
 using System;
 using System.Net;
 using System.Web.Http;
@@ -10,11 +11,14 @@ namespace Facel.WebApi.Controllers
 {
     public class SucursalController : ApiController
     {
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(string search = "")
         {
             try
             {
                 Sucursal_FE be = new Sucursal_FE();
+
+                if (search != "")
+                    be.Nombre = new Filter<string>(search, false, Operator.Like);
 
                 var list = new Sucursal_FL().LoadConvert(be);
 
@@ -115,6 +119,5 @@ namespace Facel.WebApi.Controllers
                 return InternalServerError();
             }
         }
-
     }
 }

@@ -1,5 +1,6 @@
-﻿<#@ template debug="true" hostSpecific="true" #>
+﻿<#@ template debug="false" hostSpecific="true" #>
 <#@ include file="EF.Utility.CS.ttinclude"#>
+<#@ include file="Model.tt"#>
 <#@ output extension=".cs" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.IO" #>
@@ -74,28 +75,48 @@ string DelPadreHijo(string paramText)
 {
     if (paramText.ToLower().Contains("padre"))
             paramText = paramText.Substring(0, paramText.ToLower().IndexOf("padre"));
-//    if (paramText.ToLower().Contains("hijo"))
-//            paramText = paramText.Substring(0, paramText.ToLower().IndexOf("hijo"));
+    if (paramText.ToLower().Contains("hijo"))
+            paramText = paramText.Substring(0, paramText.ToLower().IndexOf("hijo"));
 
     return paramText;
 }
 #>
 <#+
-string CaseToCamel(string paramText, bool paramFirst = true)
+string CaseToCamelWPrefix(string paramText)
 {
-    bool bUpper = true;
-	bool bFirst = true;
+	if (prefix == "")
+		return CaseToCamel(paramText);
+	else
+	{
+        string textPrefix = CaseToCamel(paramText.Substring(0, paramText.IndexOf('_')));
+		paramText = CaseToCamelWOPrefix(paramText);
+
+        return textPrefix + "_" + paramText;
+	}
+}
+#>
+<#+
+string CaseToCamelWOPrefix(string paramText)
+{
+    if (prefix != "")
+    {
+        int index = paramText.IndexOf('_');
+        paramText = paramText.Substring(index, paramText.Length - index);
+
+    }
+    return CaseToCamel(paramText);
+}
+#>
+<#+
+string CaseToCamel(string paramText)
+{
+	bool bUpper = true;
     string sCamel = string.Empty;
 	
     for (int i = 0; i < paramText.Length; i++)
     {
         if (paramText[i] == '_' || paramText[i] == '-' || paramText[i] == ' ')
         {
-           	if (paramFirst && bFirst)
-			{
-				sCamel += paramText[i].ToString();
-				bFirst = false;
-			}
 			bUpper = true;
         }
 		else
@@ -107,35 +128,6 @@ string CaseToCamel(string paramText, bool paramFirst = true)
 	        }
 	        else
 	            sCamel += paramText[i].ToString();
-		}
-	}
-
-    return sCamel;
-}
-#>
-<#+
-string CaseToCamelWOPrefix(string paramText)
-{
-	bool bSkip = true;
-    bool bUpper = true;
-    string sCamel = string.Empty;
-	
-    for (int i = 0; i < paramText.Length; i++)
-    {
-        if (paramText[i] == '_' || paramText[i] == '-' || paramText[i] == ' ')
-        {
-			bSkip = false;
-			bUpper = true;
-        }
-		else
-		{
-				if (bUpper)
-		        {
-		            sCamel += paramText[i].ToString().ToUpper();
-		            bUpper = false;
-		        }
-		        else
-		            sCamel += paramText[i].ToString();
 		}
 	}
 

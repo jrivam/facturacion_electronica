@@ -44,9 +44,9 @@ namespace Facel.Mvc.Controllers
             }
         }
 
-        public ActionResult Create(int IdEmpresa)
+        public ActionResult Create(int? IdEmpresa)
         {
-            return View();
+            return View(new Sucursal_BE() { IdEmpresa = IdEmpresa });
         }
 
         [HttpPost]
@@ -58,7 +58,7 @@ namespace Facel.Mvc.Controllers
 
                 var serialized = JsonConvert.SerializeObject(parambe);
 
-                var response = await client.PostAsync("api/Sucursal", new StringContent(serialized, System.Text.Encoding.Unicode, "application/json"));
+                var response = await client.PostAsync("api/sucursal", new StringContent(serialized, System.Text.Encoding.Unicode, "application/json"));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -82,7 +82,7 @@ namespace Facel.Mvc.Controllers
             {
                 var client = MvcHttpClient.GetClient();
 
-                HttpResponseMessage response = await client.GetAsync("api/Sucursal/" + id);
+                HttpResponseMessage response = await client.GetAsync("api/sucursal/" + id);
 
                 string content = await response.Content.ReadAsStringAsync();
 
@@ -133,7 +133,7 @@ namespace Facel.Mvc.Controllers
             {
                 var client = MvcHttpClient.GetClient();
 
-                var response = await client.DeleteAsync("api/Sucursal/" + id);
+                var response = await client.DeleteAsync("api/sucursal/" + id);
 
                 if (response.IsSuccessStatusCode)
                 {

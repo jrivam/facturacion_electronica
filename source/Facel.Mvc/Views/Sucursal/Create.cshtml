@@ -4,17 +4,64 @@
     ViewBag.Title = "Create";
 }
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-3.1.1.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input#IdEmpresa").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "http://localhost:11015/api/empresa",
+                    type: "GET",
+                    dataType: "json",
+                    data: { search: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.razonSocial, value: item.razonSocial };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "nor", results: "r"
+            }
+        });
+    })
+</script>  
+
+
 <h2>Create</h2>
 
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.IdEmpresa)
+
     <div class="form-horizontal">
         <h4>Sucursal</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <dl class="dl-horizontal">
+            <dt>
+                Empresa
+            </dt>
+
+            <dd>
+                @if (Model.IdEmpresa == null)
+                {
+                    @Html.EditorFor(model => model.IdEmpresa)
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.IdEmpresa)
+                    @Html.DisplayFor(model => model.Empresa.RazonSocial)
+                }
+            </dd>
+
+        </dl>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
