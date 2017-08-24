@@ -72,8 +72,16 @@ S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bi
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\PostSharp.dll
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\PostSharp.xml
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.pssym
-S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.csprojResolveAssemblyReference.cache
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll.postsharp
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.pdb
 S:\version\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\PostSharpHost.config
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.dll
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.pdb
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\PostSharp.dll
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\PostSharp.xml
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\bin\Debug\00.01.01.Library.Common.pssym
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll.postsharp
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.dll
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\00.01.01.Library.Common.pdb
+C:\develop\git\facturacion_electronica\source\00.Library\01.01.Library.Common\obj\Debug\PostSharpHost.config

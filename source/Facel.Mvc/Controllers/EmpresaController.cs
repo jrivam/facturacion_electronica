@@ -49,32 +49,6 @@ namespace Facel.Mvc.Controllers
             return View();
         }
 
-        public async Task<ActionResult> Details(int id)
-        {
-            try
-            {
-                var client = MvcHttpClient.GetClient();
-
-                HttpResponseMessage response = await client.GetAsync("api/empresa/" + id);
-
-                string content = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var model = JsonConvert.DeserializeObject<Empresa_BE>(content);
-                    model.Sucursales_Load();
-
-                    return View(model);
-                }
-
-                return Content("An error occurred: " + content);
-            }
-            catch (Exception ex)
-            {
-                return Content("An error occurred");
-            }
-        }
-
         [HttpPost]
         public async Task<ActionResult> Create(Empresa_BE parambe)
         {
@@ -115,6 +89,8 @@ namespace Facel.Mvc.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var model = JsonConvert.DeserializeObject<Empresa_BE>(content);
+                    model.Sucursales_Load();
+
                     return View(model);
                 }
 
